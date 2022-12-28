@@ -2,11 +2,11 @@
  * @Author: super_javan 296652579@qq.com
  * @Date: 2022-12-27 11:36:50
  * @LastEditors: super_javan 296652579@qq.com
- * @LastEditTime: 2022-12-28 15:17:45
+ * @LastEditTime: 2022-12-28 16:54:36
  * @FilePath: \cocos-nodejs-io-game-start-demo-master\apps\client\assets\Scripts\UI\JoyStickManager.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab } from 'cc';
+import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab, SpriteFrame } from 'cc';
 import Singleton from '../Base/Singleton';
 import { IActorMove, ISate } from '../Common';
 import { EnityEnum } from '../Common/EnityEnum';
@@ -21,6 +21,7 @@ export class DataManager extends Singleton {
     jm:JoyStickManager;
     prefabeMap:Map<string,Prefab> = new Map<string,Prefab>();
     actorMap:Map<number,ActorManager> = new Map<number,ActorManager>();
+    textureMap:Map<string,SpriteFrame[]> = new Map<string,SpriteFrame[]>();
 
     static get Instance(){
         return super.GetInstance<DataManager>();
@@ -30,7 +31,7 @@ export class DataManager extends Singleton {
         actors:[
             {
                 id:1,
-                type:EnityEnum.EnityEnum_ACTOR,
+                type:EnityEnum.EnityEnum_ACTOR1,
                 position:{
                     x:0,
                     y:0

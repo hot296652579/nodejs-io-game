@@ -2,13 +2,13 @@
  * @Author: super_javan 296652579@qq.com
  * @Date: 2022-12-27 11:36:50
  * @LastEditors: super_javan 296652579@qq.com
- * @LastEditTime: 2022-12-28 14:58:32
+ * @LastEditTime: 2022-12-28 16:10:00
  * @FilePath: \cocos-nodejs-io-game-start-demo-master\apps\client\assets\Scripts\UI\JoyStickManager.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab, instantiate } from 'cc';
+import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab, instantiate, SpriteFrame } from 'cc';
 import { EnityEnum } from '../Common/EnityEnum';
-import { PrefabPathEnum } from '../Enum';
+import { PrefabPathEnum, TexturePathEnum } from '../Enum';
 import { ResourceManager } from '../Global/ResourceManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { ActorManager } from './ActorManager';
@@ -48,6 +48,17 @@ export class BattleManager extends Component {
                     DataManager.Instance.prefabeMap.set(type,prefab)
                 })
                 list.push(prefab)
+
+                await Promise.all(list)
+            }
+        }
+
+        for (const type in TexturePathEnum) {
+            if (Object.prototype.hasOwnProperty.call(TexturePathEnum, type)) {
+                const texture = await ResourceManager.Instance.loadDir(TexturePathEnum[type],SpriteFrame).then((sp) =>{
+                    DataManager.Instance.textureMap.set(type,sp)
+                })
+                list.push(texture)
 
                 await Promise.all(list)
             }

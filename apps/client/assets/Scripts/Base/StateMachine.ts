@@ -1,5 +1,13 @@
+/*
+ * @Author: super_javan 296652579@qq.com
+ * @Date: 2022-12-27 17:13:19
+ * @LastEditors: super_javan 296652579@qq.com
+ * @LastEditTime: 2022-12-28 16:01:45
+ * @FilePath: \node-io-game\apps\client\assets\Scripts\Base\StateMachine.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { _decorator, Animation, Component } from "cc";
-import { EntityTypeEnum } from "../Common";
+import { EnityEnum } from '../Common/EnityEnum';
 import { FsmParamTypeEnum } from "../Enum";
 const { ccclass } = _decorator;
 import State from "./State";
@@ -45,7 +53,7 @@ export default abstract class StateMachine extends Component {
   params: Map<string, IParamsValue> = new Map();
   stateMachines: Map<string, SubStateMachine | State> = new Map();
   animationComponent: Animation;
-  type: EntityTypeEnum;
+  type: EnityEnum;
 
   getParams(paramName: string) {
     if (this.params.has(paramName)) {
