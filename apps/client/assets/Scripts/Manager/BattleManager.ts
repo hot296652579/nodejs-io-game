@@ -2,7 +2,7 @@
  * @Author: super_javan 296652579@qq.com
  * @Date: 2022-12-27 11:36:50
  * @LastEditors: super_javan 296652579@qq.com
- * @LastEditTime: 2022-12-28 16:10:00
+ * @LastEditTime: 2022-12-28 17:12:01
  * @FilePath: \cocos-nodejs-io-game-start-demo-master\apps\client\assets\Scripts\UI\JoyStickManager.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -47,9 +47,7 @@ export class BattleManager extends Component {
                 const prefab = await ResourceManager.Instance.loadRes(PrefabPathEnum[type],Prefab).then((prefab) =>{
                     DataManager.Instance.prefabeMap.set(type,prefab)
                 })
-                list.push(prefab)
-
-                await Promise.all(list)
+                list.push(prefab) 
             }
         }
 
@@ -59,10 +57,10 @@ export class BattleManager extends Component {
                     DataManager.Instance.textureMap.set(type,sp)
                 })
                 list.push(texture)
-
-                await Promise.all(list)
             }
         }
+
+        await Promise.all(list)
     }
 
     initMap(){
