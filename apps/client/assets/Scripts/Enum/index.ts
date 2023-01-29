@@ -45,5 +45,6 @@ export enum EventEnum {
 
 export enum InputTypeEnum {
   ActorMove = 'ActorMove',
-  ActorShoot = 'ActorShoot'
+  ActorShoot = 'ActorShoot',
+  TimePast = 'TimePast'
 }

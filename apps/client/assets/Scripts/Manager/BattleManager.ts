@@ -9,7 +9,7 @@
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab, instantiate, SpriteFrame } from 'cc';
 import { EnityEnum } from '../Common';
 
-import { PrefabPathEnum, TexturePathEnum } from '../Enum';
+import { InputTypeEnum, PrefabPathEnum, TexturePathEnum } from '../Enum';
 import { ResourceManager } from '../Global/ResourceManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { ActorManager } from './ActorManager';
@@ -75,12 +75,17 @@ export class BattleManager extends Component {
         actor.setParent(this.stage)
     }
 
-    update(){
+    update(dt){
         if(!this.showRender)
             return
 
         this.UIRender();
         this.UIRanderBullet();
+
+        DataManager.Instance.applyInput({
+            type:InputTypeEnum.TimePast,
+            dt,
+        })
     }
 
     UIRender(){

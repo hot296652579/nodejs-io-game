@@ -17,6 +17,10 @@ import { BulletManager } from './BulletManager';
 const { ccclass, property } = _decorator;
 
 const ACTOR_SPEED = 100;
+const BULLET_SPEED = 600;
+
+const STAGE_WIDTH = 960;
+const STAGE_HEIGHT = 640;
 @ccclass('DataManager')
 export class DataManager extends Singleton {
 
@@ -76,6 +80,24 @@ export class DataManager extends Singleton {
                     type:this.actorMap.get(owner).bulletType
                 }
                 this.state.bullets.push(bullet)
+                break;
+            }
+
+            case InputTypeEnum.TimePast:{
+                const {dt} = input
+                const {bullets} = this.state
+
+                for (let index = bullets.length - 1; index >= 0; index--) {
+                    const bullet = bullets[index];
+                    if(Math.abs(bullet.position.x) > STAGE_WIDTH / 2 || Math.abs(bullet.position.y) > STAGE_HEIGHT / 2){
+                        bullets.splice(index,1)
+                    }
+                }
+
+                for (const bullet of bullets) {
+                    bullet.position.x += bullet.direction.x * dt * BULLET_SPEED;  
+                    bullet.position.y += bullet.direction.y * dt * BULLET_SPEED;   
+                }
                 break;
             }
 

@@ -37,7 +37,7 @@ export interface ISate {
     nextShoot:number
 }
 
-export type IClientInput = IWeaponShoot | IActorMove
+export type IClientInput = IWeaponShoot | IActorMove | ITimePast
 
 export interface IActorMove{
     id:number,
@@ -51,6 +51,11 @@ export interface IWeaponShoot{
     type:InputTypeEnum.ActorShoot,
     direction:posVec2,
     position:posVec2
+}
+
+export interface ITimePast{
+    type:InputTypeEnum.TimePast,
+    dt:number
 }
 
 export enum EnityEnum{
