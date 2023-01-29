@@ -1,3 +1,6 @@
+import { IVec2 } from "cc"
+import { InputTypeEnum } from "../Enum"
+
 /*
  * @Author: super_javan 296652579@qq.com
  * @Date: 2022-12-27 16:04:16
@@ -15,14 +18,26 @@ export interface IActor{
     type:string,
     id:number,
     weaponType:string,
+    bulletType:string,
     position:posVec2,
     direction:posVec2
 }
 
+export interface IBullet{
+    id:number,
+    type:string,
+    owner:number,
+    position:posVec2,
+    direction:posVec2
+}
 
 export interface ISate {
-    actors:IActor[]
+    actors:IActor[],
+    bullets:IBullet[],
+    nextShoot:number
 }
+
+export type IClientInput = IWeaponShoot | IActorMove
 
 export interface IActorMove{
     id:number,
@@ -31,9 +46,17 @@ export interface IActorMove{
     dt:number
 }
 
+export interface IWeaponShoot{
+    owner:number,
+    type:InputTypeEnum.ActorShoot,
+    direction:posVec2,
+    position:posVec2
+}
+
 export enum EnityEnum{
     EnityEnum_ACTOR1 = 'Actor1',
     EnityEnum_ACTOR2 = 'Actor2',
     EnityEnum_Weapon1 = 'Weapon1',
-    EnityEnum_MAP = 'Map'
+    EnityEnum_MAP = 'Map',
+    EnityEnum_Bullet1 = 'EnityEnum_Bullet1'
 }

@@ -8,8 +8,8 @@
  */
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate } from 'cc';
 import { EntityManager } from '../Base/EntityManager';
-import { IActor } from '../Common';
-import { EntityStateEnum } from '../Enum';
+import { EnityEnum, IActor } from '../Common';
+import { EntityStateEnum, InputTypeEnum } from '../Enum';
 import { ActorStateMachine } from '../Enum/ActorStateMachine';
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { radToAngle } from '../Utils';
@@ -20,18 +20,12 @@ const { ccclass, property } = _decorator;
 @ccclass('ActorManager')
 export class ActorManager extends EntityManager {
 
-    @property(Node)
-    weaponBody:Node = null;
-
-    @property(Node)
-    weaponAnchor:Node = null;
-
-    @property(Node)
-    weaponPoint:Node = null;
-
     wm:WeaponManager = null;
 
+    bulletType:string;
+
     init(data:IActor){
+        this.bulletType = data.bulletType;
         this.fsm = this.addComponent(ActorStateMachine)
         this.fsm.init(data.type)
 
@@ -50,7 +44,7 @@ export class ActorManager extends EntityManager {
             const {x,y} = DataManager.Instance.jm.inputVec;
             DataManager.Instance.applyInput({
                 id:1,
-                type:'Actor',
+                type:InputTypeEnum.ActorMove,
                 direction:{
                     x,y
                 },
@@ -75,7 +69,7 @@ export class ActorManager extends EntityManager {
         const rad = Math.asin(direction.y / side)
         const angle = radToAngle(rad)
         this.wm.node.setRotationFromEuler(0,0,angle)
-        console.log('angle:' + angle)
+        // console.log('angle:' + angle)
     }
 
     onDestroy () {

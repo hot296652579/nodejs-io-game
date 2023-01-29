@@ -32,6 +32,7 @@ export class BattleManager extends Component {
     onLoad () {
         this.stage.removeAllChildren();
        DataManager.Instance.jm = this.joyStick.getComponent(JoyStickManager);
+       DataManager.Instance.UIStage = this.stage;
     }
 
     async start(){

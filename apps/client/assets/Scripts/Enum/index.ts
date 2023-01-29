@@ -37,4 +37,11 @@ export enum TexturePathEnum {
 }
 
 
-export enum EventEnum {}
+export enum EventEnum {
+  WeaponShoot = 'WeaponShoot'
+}
+
+export enum InputTypeEnum {
+  ActorMove = 'ActorMove',
+  ActorShoot = 'ActorShoot'
+}
