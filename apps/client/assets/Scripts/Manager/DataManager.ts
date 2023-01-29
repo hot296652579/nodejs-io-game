@@ -8,8 +8,8 @@
  */
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab, SpriteFrame } from 'cc';
 import Singleton from '../Base/Singleton';
-import { IActorMove, ISate } from '../Common';
-import { EnityEnum } from '../Common/EnityEnum';
+import { EnityEnum, IActorMove, ISate } from '../Common';
+
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { ActorManager } from './ActorManager';
 const { ccclass, property } = _decorator;
@@ -32,6 +32,7 @@ export class DataManager extends Singleton {
             {
                 id:1,
                 type:EnityEnum.EnityEnum_ACTOR1,
+                weaponType:EnityEnum.EnityEnum_Weapon1,
                 position:{
                     x:0,
                     y:0

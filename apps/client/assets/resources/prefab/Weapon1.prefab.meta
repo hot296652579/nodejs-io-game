@@ -2,13 +2,12 @@
   "ver": "1.1.39",
   "importer": "prefab",
   "imported": true,
-  "uuid": "fe3dc725-d4bb-4159-9976-414389c3a159",
+  "uuid": "65aea1f1-9e76-4270-8ad1-6f02a7109168",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Map",
-    "persistent": false
+    "syncNodeName": "Weapon1"
   }
 }

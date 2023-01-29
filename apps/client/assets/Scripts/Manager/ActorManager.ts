@@ -6,24 +6,43 @@
  * @FilePath: \cocos-nodejs-io-game-start-demo-master\apps\client\assets\Scripts\UI\JoyStickManager.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform } from 'cc';
+import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate } from 'cc';
 import { EntityManager } from '../Base/EntityManager';
 import { IActor } from '../Common';
-import { EnityEnum } from '../Common/EnityEnum';
 import { EntityStateEnum } from '../Enum';
 import { ActorStateMachine } from '../Enum/ActorStateMachine';
 import { JoyStickManager } from '../UI/JoyStickManager';
+import { radToAngle } from '../Utils';
 import { DataManager } from './DataManager';
+import { WeaponManager } from './WeaponManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('ActorManager')
 export class ActorManager extends EntityManager {
+
+    @property(Node)
+    weaponBody:Node = null;
+
+    @property(Node)
+    weaponAnchor:Node = null;
+
+    @property(Node)
+    weaponPoint:Node = null;
+
+    wm:WeaponManager = null;
 
     init(data:IActor){
         this.fsm = this.addComponent(ActorStateMachine)
         this.fsm.init(data.type)
 
         this.state = EntityStateEnum.Idle
+
+        const weapon = DataManager.Instance.prefabeMap.get('Weapon1')
+        const weaponPreb = instantiate(weapon)
+
+        weaponPreb.setParent(this.node)
+        this.wm = weaponPreb.addComponent(WeaponManager)
+        this.wm.init(data)
     }
 
     update(dt){
@@ -51,6 +70,12 @@ export class ActorManager extends EntityManager {
         if(direction.x !== 0){
             this.node.setScale(direction.x > 0 ? 1 : -1,1)
         }
+
+        const side = Math.sqrt(direction.x ** 2 + direction.y ** 2)
+        const rad = Math.asin(direction.y / side)
+        const angle = radToAngle(rad)
+        this.wm.node.setRotationFromEuler(0,0,angle)
+        console.log('angle:' + angle)
     }
 
     onDestroy () {

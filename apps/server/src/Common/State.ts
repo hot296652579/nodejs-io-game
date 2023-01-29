@@ -12,7 +12,9 @@ interface posVec2{
 }
 
 export interface IActor{
+    type:string,
     id:number,
+    weaponType:string,
     position:posVec2,
     direction:posVec2
 }
@@ -27,4 +29,11 @@ export interface IActorMove{
     type:string,
     direction:posVec2,
     dt:number
+}
+
+export enum EnityEnum{
+    EnityEnum_ACTOR1 = 'Actor1',
+    EnityEnum_ACTOR2 = 'Actor2',
+    EnityEnum_Weapon1 = 'Weapon1',
+    EnityEnum_MAP = 'Map'
 }

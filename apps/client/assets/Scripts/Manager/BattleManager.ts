@@ -7,7 +7,8 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab, instantiate, SpriteFrame } from 'cc';
-import { EnityEnum } from '../Common/EnityEnum';
+import { EnityEnum } from '../Common';
+
 import { PrefabPathEnum, TexturePathEnum } from '../Enum';
 import { ResourceManager } from '../Global/ResourceManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
@@ -46,6 +47,7 @@ export class BattleManager extends Component {
             if (Object.prototype.hasOwnProperty.call(PrefabPathEnum, type)) {
                 const prefab = await ResourceManager.Instance.loadRes(PrefabPathEnum[type],Prefab).then((prefab) =>{
                     DataManager.Instance.prefabeMap.set(type,prefab)
+
                 })
                 list.push(prefab) 
             }
@@ -55,6 +57,7 @@ export class BattleManager extends Component {
             if (Object.prototype.hasOwnProperty.call(TexturePathEnum, type)) {
                 const texture = await ResourceManager.Instance.loadDir(TexturePathEnum[type],SpriteFrame).then((sp) =>{
                     DataManager.Instance.textureMap.set(type,sp)
+
                 })
                 list.push(texture)
             }
