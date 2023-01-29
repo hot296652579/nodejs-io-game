@@ -13,6 +13,7 @@ import { InputTypeEnum } from '../Enum';
 
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { ActorManager } from './ActorManager';
+import { BulletManager } from './BulletManager';
 const { ccclass, property } = _decorator;
 
 const ACTOR_SPEED = 100;
@@ -22,6 +23,7 @@ export class DataManager extends Singleton {
     UIStage:Node;
     jm:JoyStickManager;
     prefabeMap:Map<string,Prefab> = new Map<string,Prefab>();
+    bulletMap:Map<number,BulletManager> = new Map<number,BulletManager>();
     actorMap:Map<number,ActorManager> = new Map<number,ActorManager>();
     textureMap:Map<string,SpriteFrame[]> = new Map<string,SpriteFrame[]>();
 
@@ -35,7 +37,7 @@ export class DataManager extends Singleton {
                 id:1,
                 type:EnityEnum.EnityEnum_ACTOR1,
                 weaponType:EnityEnum.EnityEnum_Weapon1,
-                bulletType:EnityEnum.EnityEnum_Bullet1,
+                bulletType:EnityEnum.EnityEnum_Bullet2,
                 position:{
                     x:0,
                     y:0

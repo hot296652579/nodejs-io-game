@@ -13,6 +13,7 @@ import { PrefabPathEnum, TexturePathEnum } from '../Enum';
 import { ResourceManager } from '../Global/ResourceManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { ActorManager } from './ActorManager';
+import { BulletManager } from './BulletManager';
 import { DataManager } from './DataManager';
 const { ccclass, property } = _decorator;
 
@@ -79,6 +80,7 @@ export class BattleManager extends Component {
             return
 
         this.UIRender();
+        this.UIRanderBullet();
     }
 
     UIRender(){
@@ -97,6 +99,27 @@ export class BattleManager extends Component {
                 am.init(data)
             }else{
                 am.render(data)
+            }
+        }
+    }
+
+    UIRanderBullet(){
+        const bullets = DataManager.Instance.state.bullets;
+        if(bullets.length <= 0)return;
+        for (const data of bullets) {
+            const {id,type} = data
+            let bm = DataManager.Instance.bulletMap.get(id)
+            if(!bm){
+                const p = DataManager.Instance.prefabeMap.get(type)
+                const bullet = instantiate(p)
+
+                bullet.setParent(this.stage)
+                
+                bm = bullet.addComponent(BulletManager)
+                DataManager.Instance.bulletMap.set(id,bm)
+                bm.init(data)
+            }else{
+                bm.render(data)
             }
         }
     }
