@@ -6,15 +6,17 @@
  * @FilePath: \cocos-nodejs-io-game-start-demo-master\apps\client\assets\Scripts\UI\JoyStickManager.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate } from 'cc';
+import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate, IVec2 } from 'cc';
 import { EntityManager } from '../Base/EntityManager';
 import { EnityEnum, IActor, IBullet } from '../Common';
-import { EntityStateEnum, InputTypeEnum } from '../Enum';
+import { EntityStateEnum, EventEnum, InputTypeEnum } from '../Enum';
 import { ActorStateMachine } from '../Enum/ActorStateMachine';
 import { BulletStateMachine } from '../Enum/BulletStateMachine';
+import EventManager from '../Global/EventManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { radToAngle } from '../Utils';
 import { DataManager } from './DataManager';
+import { ExplosionManager } from './ExplosionManager';
 import { WeaponManager } from './WeaponManager';
 const { ccclass, property } = _decorator;
 
@@ -24,8 +26,14 @@ export class BulletManager extends EntityManager {
     wm:WeaponManager = null;
 
     bulletType:string;
+    id:number;
+
+    start(){
+        EventManager.Instance.on(EventEnum.BulletExplosion,this.explosionHandler,this)
+    }
 
     init(data:IBullet){
+        this.id = data.id
         this.bulletType = data.type;
         this.fsm = this.addComponent(BulletStateMachine)
         this.fsm.init(data.type)
@@ -33,6 +41,20 @@ export class BulletManager extends EntityManager {
         this.state = EntityStateEnum.Idle
 
         this.node.active = false
+    }
+
+    explosionHandler(id:number,{x,y}:IVec2){
+        if(id != this.id)return
+
+        const prefab = DataManager.Instance.prefabeMap.get(EnityEnum.EnityEnum_Explosion)
+        const explosion = instantiate(prefab)
+        explosion.setParent(DataManager.Instance.UIStage)
+        const em = explosion.addComponent(ExplosionManager)
+        em.init(EnityEnum.EnityEnum_Explosion,{x,y})
+
+        this.node.destroy()
+        EventManager.Instance.off(EventEnum.BulletExplosion,this.explosionHandler,this)
+        DataManager.Instance.bulletMap.delete(this.id)
     }
 
     render(data:IBullet){

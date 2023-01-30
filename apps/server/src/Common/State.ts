@@ -64,5 +64,6 @@ export enum EnityEnum{
     EnityEnum_Weapon1 = 'Weapon1',
     EnityEnum_MAP = 'Map',
     EnityEnum_Bullet1 = 'Bullet1',
-    EnityEnum_Bullet2 = 'Bullet2'
+    EnityEnum_Bullet2 = 'Bullet2',
+    EnityEnum_Explosion = 'Explosion'
 }

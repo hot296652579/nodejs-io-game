@@ -43,9 +43,18 @@ export class WeaponManager extends EntityManager {
 
     addEvents(){
         EventManager.Instance.on(EventEnum.WeaponShoot,this.shootHanlder,this)
+        EventManager.Instance.on(EventEnum.BulletBorn,this.bulletBornHanlder,this)
+    }
+
+    bulletBornHanlder(owner:number){
+        if(owner != this.owner)return
+
+        this.state = EntityStateEnum.Attack
     }
 
     shootHanlder(){
+        if(this.owner != DataManager.Instance.MYSELF_PLAYERID)return
+        
         const pointWorld = this.point.getWorldPosition()
         const pointStagePosition = DataManager.Instance.UIStage.getComponent(UITransform).convertToNodeSpaceAR(pointWorld)
         const anchorWorldPos = this.anchor.getWorldPosition()

@@ -23,8 +23,10 @@ export class ActorManager extends EntityManager {
     wm:WeaponManager = null;
 
     bulletType:string;
+    id:number;
 
     init(data:IActor){
+        this.id = data.id
         this.bulletType = data.bulletType;
         this.fsm = this.addComponent(ActorStateMachine)
         this.fsm.init(data.type)
