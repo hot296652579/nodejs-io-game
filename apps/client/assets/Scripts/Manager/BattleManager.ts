@@ -10,6 +10,7 @@ import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransfor
 import { EnityEnum } from '../Common';
 
 import { InputTypeEnum, PrefabPathEnum, TexturePathEnum } from '../Enum';
+import { NetWorkManager } from '../Global/NetWorkManager';
 import { ResourceManager } from '../Global/ResourceManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { ActorManager } from './ActorManager';
@@ -20,45 +21,57 @@ const { ccclass, property } = _decorator;
 @ccclass('BattleManager')
 export class BattleManager extends Component {
     @property(Node)
-    stage:Node = null;
+    stage: Node = null;
 
     @property(Node)
-    joyStick:Node = null;
+    joyStick: Node = null;
 
     @property(Node)
-    actor:Node = null;
+    actor: Node = null;
 
-    showRender:boolean = false;
+    showRender: boolean = false;
 
-    onLoad () {
+    onLoad() {
         this.stage.removeAllChildren();
-       DataManager.Instance.jm = this.joyStick.getComponent(JoyStickManager);
-       DataManager.Instance.UIStage = this.stage;
+        DataManager.Instance.jm = this.joyStick.getComponent(JoyStickManager);
+        DataManager.Instance.UIStage = this.stage;
     }
 
-    async start(){
-        await this.loadRes()
-        this.initMap()
+    async start() {
+        // await this.loadRes()
+        // this.initMap()
+        // this.showRender = true;
 
-        this.showRender = true;
+        await this.connectNet()
+        NetWorkManager.Instance.sendMessge('i`m cocos creator...')
+        NetWorkManager.Instance.listenMsg('axiba', (e) => {
+            console.log('from server data : ' + e)
+        }, this)
     }
 
-    async loadRes(){
+    async connectNet() {
+        if (!await NetWorkManager.Instance.connect().catch(() => false)) {
+            await new Promise((rs) => setTimeout(rs, 1000))
+            await this.connectNet()
+        }
+    }
+
+    async loadRes() {
         const list = [];
         for (const type in PrefabPathEnum) {
             if (Object.prototype.hasOwnProperty.call(PrefabPathEnum, type)) {
-                const prefab = await ResourceManager.Instance.loadRes(PrefabPathEnum[type],Prefab).then((prefab) =>{
-                    DataManager.Instance.prefabeMap.set(type,prefab)
+                const prefab = await ResourceManager.Instance.loadRes(PrefabPathEnum[type], Prefab).then((prefab) => {
+                    DataManager.Instance.prefabeMap.set(type, prefab)
 
                 })
-                list.push(prefab) 
+                list.push(prefab)
             }
         }
 
         for (const type in TexturePathEnum) {
             if (Object.prototype.hasOwnProperty.call(TexturePathEnum, type)) {
-                const texture = await ResourceManager.Instance.loadDir(TexturePathEnum[type],SpriteFrame).then((sp) =>{
-                    DataManager.Instance.textureMap.set(type,sp)
+                const texture = await ResourceManager.Instance.loadDir(TexturePathEnum[type], SpriteFrame).then((sp) => {
+                    DataManager.Instance.textureMap.set(type, sp)
 
                 })
                 list.push(texture)
@@ -68,71 +81,71 @@ export class BattleManager extends Component {
         await Promise.all(list)
     }
 
-    initMap(){
+    initMap() {
         const p = DataManager.Instance.prefabeMap.get(EnityEnum.EnityEnum_MAP)
         const actor = instantiate(p)
 
         actor.setParent(this.stage)
     }
 
-    update(dt){
-        if(!this.showRender)
+    update(dt) {
+        if (!this.showRender)
             return
 
         this.UIRender();
         this.UIRanderBullet();
 
         DataManager.Instance.applyInput({
-            type:InputTypeEnum.TimePast,
+            type: InputTypeEnum.TimePast,
             dt,
         })
     }
 
-    UIRender(){
+    UIRender() {
         const actors = DataManager.Instance.state.actors;
         for (const data of actors) {
-            const {id,type} = data
+            const { id, type } = data
             let am = DataManager.Instance.actorMap.get(id)
-            if(!am){
+            if (!am) {
                 const p = DataManager.Instance.prefabeMap.get(type)
                 const actor = instantiate(p)
 
                 actor.setParent(this.stage)
-                
+
                 am = actor.getComponent(ActorManager)
-                DataManager.Instance.actorMap.set(id,am)
+                DataManager.Instance.actorMap.set(id, am)
                 am.init(data)
-            }else{
+            } else {
                 am.render(data)
             }
         }
     }
 
-    UIRanderBullet(){
+    UIRanderBullet() {
         const bullets = DataManager.Instance.state.bullets;
-        if(bullets.length <= 0)return;
+        if (bullets.length <= 0) return;
         for (const data of bullets) {
-            const {id,type} = data
+            const { id, type } = data
             let bm = DataManager.Instance.bulletMap.get(id)
-            if(!bm){
+            if (!bm) {
                 const p = DataManager.Instance.prefabeMap.get(type)
                 const bullet = instantiate(p)
 
                 bullet.setParent(this.stage)
-                
+
                 bm = bullet.addComponent(BulletManager)
-                DataManager.Instance.bulletMap.set(id,bm)
+                DataManager.Instance.bulletMap.set(id, bm)
                 bm.init(data)
-            }else{
+            } else {
                 bm.render(data)
             }
         }
     }
 
-    onDestroy () {
-        
+    onDestroy() {
+
     }
 
-    
+
 }
 

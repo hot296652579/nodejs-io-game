@@ -6,7 +6,7 @@
  * @FilePath: \cocos-nodejs-io-game-start-demo-master\apps\client\assets\Scripts\UI\JoyStickManager.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate } from 'cc';
+import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate, ProgressBar } from 'cc';
 import { EntityManager } from '../Base/EntityManager';
 import { EnityEnum, IActor } from '../Common';
 import { EntityStateEnum, InputTypeEnum } from '../Enum';
@@ -19,13 +19,15 @@ const { ccclass, property } = _decorator;
 
 @ccclass('ActorManager')
 export class ActorManager extends EntityManager {
+    @property(ProgressBar)
+    prog: ProgressBar = null;
 
-    wm:WeaponManager = null;
+    wm: WeaponManager = null;
 
-    bulletType:string;
-    id:number;
+    bulletType: string;
+    id: number;
 
-    init(data:IActor){
+    init(data: IActor) {
         this.id = data.id
         this.bulletType = data.bulletType;
         this.fsm = this.addComponent(ActorStateMachine)
@@ -41,43 +43,46 @@ export class ActorManager extends EntityManager {
         this.wm.init(data)
     }
 
-    update(dt){
-        if(DataManager.Instance.jm.inputVec.length()){
-            const {x,y} = DataManager.Instance.jm.inputVec;
+    update(dt) {
+        if (DataManager.Instance.jm.inputVec.length()) {
+            const { x, y } = DataManager.Instance.jm.inputVec;
             DataManager.Instance.applyInput({
-                id:1,
-                type:InputTypeEnum.ActorMove,
-                direction:{
-                    x,y
+                id: 1,
+                type: InputTypeEnum.ActorMove,
+                direction: {
+                    x, y
                 },
                 dt
             })
 
             this.state = EntityStateEnum.Run
-        }else{
+        } else {
             this.state = EntityStateEnum.Idle
         }
     }
 
-    render(data:IActor){
-        const {position,direction} = data
-        this.node.setPosition(position.x,position.y)
+    render(data: IActor) {
+        const { position, direction } = data
+        this.node.setPosition(position.x, position.y)
 
-        if(direction.x !== 0){
-            this.node.setScale(direction.x > 0 ? 1 : -1,1)
+        if (direction.x !== 0) {
+            this.node.setScale(direction.x > 0 ? 1 : -1, 1)
+            this.prog.node.setScale(direction.x > 0 ? 1 : -1, 1)
         }
 
         const side = Math.sqrt(direction.x ** 2 + direction.y ** 2)
         const rad = Math.asin(direction.y / side)
         const angle = radToAngle(rad)
-        this.wm.node.setRotationFromEuler(0,0,angle)
+        this.wm.node.setRotationFromEuler(0, 0, angle)
         // console.log('angle:' + angle)
+
+        this.prog.progress = data.hp / this.prog.totalLength
     }
 
-    onDestroy () {
-        
+    onDestroy() {
+
     }
 
-    
+
 }
 

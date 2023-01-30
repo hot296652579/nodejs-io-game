@@ -26,6 +26,8 @@ const STAGE_HEIGHT = 640;
 const PLAYER_SIDE = 50;
 const BULLET_SIDE = 10;
 
+const ATTACK_MAGE = 10;
+
 @ccclass('DataManager')
 export class DataManager extends Singleton {
 
@@ -48,6 +50,7 @@ export class DataManager extends Singleton {
                 type: EnityEnum.EnityEnum_ACTOR1,
                 weaponType: EnityEnum.EnityEnum_Weapon1,
                 bulletType: EnityEnum.EnityEnum_Bullet2,
+                hp: 100,
                 position: {
                     x: 100,
                     y: 100
@@ -62,6 +65,7 @@ export class DataManager extends Singleton {
                 type: EnityEnum.EnityEnum_ACTOR1,
                 weaponType: EnityEnum.EnityEnum_Weapon1,
                 bulletType: EnityEnum.EnityEnum_Bullet2,
+                hp: 100,
                 position: {
                     x: -100,
                     y: -100
@@ -121,6 +125,7 @@ export class DataManager extends Singleton {
                                     y: (actor.position.y + bullet.position.y) / 2
                                 }
                             )
+                            actor.hp -= ATTACK_MAGE
                             bullets.splice(index, 1)
                             break
                         }
