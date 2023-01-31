@@ -47,7 +47,8 @@ export enum EventEnum {
   BulletBorn = 'BulletBorn',
 
   MsgClientSync = 'MsgClientSync',
-  MsgServerSync = 'MsgServerSync'
+  MsgServerSync = 'MsgServerSync',
+  MsgPlayerLogin = 'MsgPlayerLogin'
 }
 
 export enum InputTypeEnum {

@@ -6,6 +6,12 @@ interface IItem {
     cb: Function;
     ctx: unknown;
 }
+
+interface ICallAPIMsg {
+    success: boolean,
+    error?: Error,
+    res?: any
+}
 export class NetWorkManager extends Singleton {
     frameId: number = 0;
     static get Instance() {
@@ -27,7 +33,7 @@ export class NetWorkManager extends Singleton {
 
             this.wss.onmessage = (messge) => {
                 try {
-                    console.log('onmessge : ' + messge.data)
+                    // console.log('onmessge : ' + messge.data)
                     const json = JSON.parse(messge.data)
                     const { event, data } = json
                     if (this.map.has(event)) {
@@ -48,7 +54,28 @@ export class NetWorkManager extends Singleton {
                 reject(false)
             }
         })
+    }
 
+    async callAPIMsg(name: string, data): Promise<ICallAPIMsg> {
+        return new Promise((resolve) => {
+            try {
+                const timeout = setTimeout(() => {
+                    resolve({ success: false, error: new Error('Time out') })
+                    this.unlistenMsg(name, cb, null)
+                }, 2000);
+
+                const cb = function (res) {
+                    resolve(res)
+                    clearTimeout(timeout)
+                    this.unlistenMsg(name, cb, null)
+                }
+
+                this.listenMsg(name, cb, null)
+                this.sendMessge(name, data)
+            } catch (error) {
+                resolve({ success: false, error })
+            }
+        })
     }
 
     sendMessge(name: string, data) {
@@ -57,7 +84,7 @@ export class NetWorkManager extends Singleton {
             name
         }
         this.wss.send(JSON.stringify(msg))
-        console.log(msg)
+        // console.log(msg)
     }
 
     listenMsg(event: string, cb: Function, ctx: unknown) {

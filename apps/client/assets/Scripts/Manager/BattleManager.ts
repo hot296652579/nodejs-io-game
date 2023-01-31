@@ -41,7 +41,15 @@ export class BattleManager extends Component {
     async start() {
         this.clearGame()
         await Promise.all([this.connectNet(), this.loadRes()])
-        this.initGame()
+        // this.initGame()
+
+        const { success, error, res } = await NetWorkManager.Instance.callAPIMsg(EventEnum.MsgPlayerLogin, '我是客户端玩家javan')
+        if (!success) {
+            console.log('回掉消息发生错误' + error)
+            return
+        }
+
+        console.log('客户端收到的数据:' + res)
     }
 
     async connectNet() {
