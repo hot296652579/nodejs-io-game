@@ -20,9 +20,12 @@ export class Connection extends EventEmitter {
             try {
                 const strMsg = buffer.toString()
                 try {
+                    // console.log(buffer)
                     const msg = JSON.parse(strMsg)
                     const { name, data } = msg
+
                     if (this.myserver.registAPIMap.has(name)) {
+                        // console.log('调用已经注册的接口...')
                         const cb = this.myserver.registAPIMap.get(name)
                         const res = cb.call(null, this, data)
                         this.sendMessge(name, {
@@ -45,13 +48,13 @@ export class Connection extends EventEmitter {
         })
     }
 
-    sendMessge(name: string, data) {
+    sendMessge(event: string, data) {
         const msg = {
             data,
-            name
+            event
         }
         this.ws.send(JSON.stringify(msg))
-        console.log(msg)
+        // console.log(msg)
     }
 
     listenMsg(event: string, cb: Function, ctx: unknown) {

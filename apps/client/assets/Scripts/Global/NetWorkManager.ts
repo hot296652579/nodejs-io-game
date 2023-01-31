@@ -33,8 +33,8 @@ export class NetWorkManager extends Singleton {
 
             this.wss.onmessage = (messge) => {
                 try {
-                    // console.log('onmessge : ' + messge.data)
                     const json = JSON.parse(messge.data)
+                    console.log('json : ' + json)
                     const { event, data } = json
                     if (this.map.has(event)) {
                         this.map.get(event).forEach(({ cb, ctx }) => {
@@ -61,6 +61,7 @@ export class NetWorkManager extends Singleton {
             try {
                 const timeout = setTimeout(() => {
                     resolve({ success: false, error: new Error('Time out') })
+                    clearTimeout(timeout)
                     this.unlistenMsg(name, cb, null)
                 }, 2000);
 
@@ -84,7 +85,6 @@ export class NetWorkManager extends Singleton {
             name
         }
         this.wss.send(JSON.stringify(msg))
-        // console.log(msg)
     }
 
     listenMsg(event: string, cb: Function, ctx: unknown) {
