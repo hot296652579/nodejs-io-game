@@ -1,21 +1,42 @@
 import { symlinkCommon } from "./Utils";
 import { WebSocketServer } from "ws";
+import { EventEnum } from "./Enum";
+// import { APIMsgEnum } from "./Common";
 
 symlinkCommon();
 
-const wss = new WebSocketServer({ port: 9898 })
+const wss = new WebSocketServer({ port: 9876 })
+let inputs = []
 
 wss.on('connection', (socket) => {
     socket.on('message', (buffer) => {
-        console.log('message buffer:' + buffer)
+        console.log('server message buffer :' + buffer)
+        const strMsg = buffer.toString()
+        try {
+
+            const msg = JSON.parse(strMsg)
+            const { name, data } = msg
+            const { frameId, input } = data
+            inputs.push(input)
+        } catch (error) {
+            console.log(error)
+        }
+
+        setInterval(() => {
+            const temp = inputs
+            inputs = []
+            const msg = {
+                event: EventEnum.MsgServerSync,
+                data: {
+                    inputs: temp
+                }
+            }
+
+            socket.send(JSON.stringify(msg))
+        }, 200)
     })
 
-    const obj = {
-        event: 'axiba',
-        data: '阿西吧 从服务器来的数据这句'
-    }
 
-    socket.send(JSON.stringify(obj))
 })
 
 wss.on('close', (socket) => {

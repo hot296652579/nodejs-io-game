@@ -1,4 +1,4 @@
-import { IVec2 } from "cc"
+// import { IVec2 } from "cc"
 import { InputTypeEnum } from "../Enum"
 
 /*
@@ -68,3 +68,4 @@ export enum EnityEnum {
     EnityEnum_Bullet2 = 'Bullet2',
     EnityEnum_Explosion = 'Explosion'
 }
+

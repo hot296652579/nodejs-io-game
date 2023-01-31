@@ -9,8 +9,9 @@
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate, ProgressBar } from 'cc';
 import { EntityManager } from '../Base/EntityManager';
 import { EnityEnum, IActor } from '../Common';
-import { EntityStateEnum, InputTypeEnum } from '../Enum';
+import { EntityStateEnum, EventEnum, InputTypeEnum } from '../Enum';
 import { ActorStateMachine } from '../Enum/ActorStateMachine';
+import EventManager from '../Global/EventManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { radToAngle } from '../Utils';
 import { DataManager } from './DataManager';
@@ -46,7 +47,9 @@ export class ActorManager extends EntityManager {
     update(dt) {
         if (DataManager.Instance.jm.inputVec.length()) {
             const { x, y } = DataManager.Instance.jm.inputVec;
-            DataManager.Instance.applyInput({
+            if (this.id != DataManager.Instance.MYSELF_PLAYERID) return
+
+            EventManager.Instance.emit(EventEnum.MsgClientSync, {
                 id: 1,
                 type: InputTypeEnum.ActorMove,
                 direction: {
@@ -54,6 +57,14 @@ export class ActorManager extends EntityManager {
                 },
                 dt
             })
+            // DataManager.Instance.applyInput({
+            //     id: 1,
+            //     type: InputTypeEnum.ActorMove,
+            //     direction: {
+            //         x, y
+            //     },
+            //     dt
+            // })
 
             this.state = EntityStateEnum.Run
         } else {

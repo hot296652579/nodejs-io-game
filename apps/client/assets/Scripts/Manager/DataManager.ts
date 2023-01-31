@@ -38,6 +38,7 @@ export class DataManager extends Singleton {
     actorMap: Map<number, ActorManager> = new Map<number, ActorManager>();
     textureMap: Map<string, SpriteFrame[]> = new Map<string, SpriteFrame[]>();
     MYSELF_PLAYERID = 1;
+    frameId = 1;
 
     static get Instance() {
         return super.GetInstance<DataManager>();

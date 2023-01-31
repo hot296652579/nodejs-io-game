@@ -7,9 +7,10 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab, instantiate, SpriteFrame } from 'cc';
-import { EnityEnum } from '../Common';
+import { EnityEnum, IClientInput } from '../Common';
 
-import { InputTypeEnum, PrefabPathEnum, TexturePathEnum } from '../Enum';
+import { EventEnum, InputTypeEnum, PrefabPathEnum, TexturePathEnum } from '../Enum';
+import EventManager from '../Global/EventManager';
 import { NetWorkManager } from '../Global/NetWorkManager';
 import { ResourceManager } from '../Global/ResourceManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
@@ -31,22 +32,16 @@ export class BattleManager extends Component {
 
     showRender: boolean = false;
 
+    frameId: number = 0;
+
     onLoad() {
-        this.stage.removeAllChildren();
-        DataManager.Instance.jm = this.joyStick.getComponent(JoyStickManager);
-        DataManager.Instance.UIStage = this.stage;
+
     }
 
     async start() {
-        // await this.loadRes()
-        // this.initMap()
-        // this.showRender = true;
-
-        await this.connectNet()
-        NetWorkManager.Instance.sendMessge('i`m cocos creator...')
-        NetWorkManager.Instance.listenMsg('axiba', (e) => {
-            console.log('from server data : ' + e)
-        }, this)
+        this.clearGame()
+        await Promise.all([this.connectNet(), this.loadRes()])
+        this.initGame()
     }
 
     async connectNet() {
@@ -54,6 +49,23 @@ export class BattleManager extends Component {
             await new Promise((rs) => setTimeout(rs, 1000))
             await this.connectNet()
         }
+    }
+
+    initGame() {
+        DataManager.Instance.jm = this.joyStick.getComponent(JoyStickManager);
+        DataManager.Instance.UIStage = this.stage;
+        this.loadRes()
+        this.initMap()
+        this.showRender = true;
+
+        EventManager.Instance.on(EventEnum.MsgClientSync, this.handlerMsgClientSync, this)
+        NetWorkManager.Instance.listenMsg(EventEnum.MsgServerSync, this.handlerMsgServerSync, this)
+    }
+
+    clearGame() {
+        EventManager.Instance.off(EventEnum.MsgClientSync, this.handlerMsgClientSync, this)
+        NetWorkManager.Instance.unlistenMsg(EventEnum.MsgServerSync, this.handlerMsgServerSync, this)
+        this.stage.removeAllChildren();
     }
 
     async loadRes() {
@@ -139,6 +151,21 @@ export class BattleManager extends Component {
             } else {
                 bm.render(data)
             }
+        }
+    }
+
+    handlerMsgClientSync(input: IClientInput) {
+        const msg = {
+            frameId: DataManager.Instance.frameId++,
+            input
+        }
+        NetWorkManager.Instance.sendMessge(EventEnum.MsgClientSync, msg)
+    }
+
+    handlerMsgServerSync({ inputs }: any) {
+        // console.log(input)
+        for (const input of inputs) {
+            DataManager.Instance.applyInput(input)
         }
     }
 
