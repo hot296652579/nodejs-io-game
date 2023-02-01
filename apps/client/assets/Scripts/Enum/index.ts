@@ -58,3 +58,8 @@ export enum InputTypeEnum {
 }
 
 
+export enum SceneEnum {
+  Login = 'Login',
+  Battle = 'Battle'
+}
+

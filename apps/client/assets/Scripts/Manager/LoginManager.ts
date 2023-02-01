@@ -6,10 +6,10 @@
  * @FilePath: \cocos-nodejs-io-game-start-demo-master\apps\client\assets\Scripts\UI\JoyStickManager.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate, ProgressBar, EditBox } from 'cc';
+import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate, ProgressBar, EditBox, resources, director } from 'cc';
 import { EntityManager } from '../Base/EntityManager';
 import { EnityEnum, IActor } from '../Common';
-import { EntityStateEnum, EventEnum, InputTypeEnum } from '../Enum';
+import { EntityStateEnum, EventEnum, InputTypeEnum, SceneEnum } from '../Enum';
 import { ActorStateMachine } from '../Enum/ActorStateMachine';
 import EventManager from '../Global/EventManager';
 import { NetWorkManager } from '../Global/NetWorkManager';
@@ -25,6 +25,7 @@ export class LoginManager extends Component {
     editBox: EditBox = null;
 
     async start() {
+        director.preloadScene(SceneEnum.Login)
         await NetWorkManager.Instance.connect()
     }
 
@@ -52,6 +53,8 @@ export class LoginManager extends Component {
 
         DataManager.Instance.Myself_PlayerID = res.player.id
         console.log('有玩家登陆,nickName :' + res.player.nickName)
+
+        director.loadScene(SceneEnum.Battle)
     }
 
     onDestroy() {
