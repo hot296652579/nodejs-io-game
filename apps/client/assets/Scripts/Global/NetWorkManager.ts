@@ -22,12 +22,19 @@ export class NetWorkManager extends Singleton {
 
     private map: Map<string, Array<IItem>> = new Map()
 
+    isConnect = false
     port = 9876
     async connect() {
         return new Promise((resolve, reject) => {
+            if (this.isConnect) {
+                resolve(true)
+                return
+            }
+
             this.wss = new WebSocket(`ws://localhost:${this.port}`)
 
             this.wss.onopen = () => {
+                this.isConnect = true
                 resolve(true)
             }
 
@@ -42,15 +49,18 @@ export class NetWorkManager extends Singleton {
                         });
                     }
                 } catch (error) {
+                    this.isConnect = false
                     console.log('message error:' + error)
                 }
             }
 
             this.wss.onerror = (e) => {
+                this.isConnect = false
                 reject(false)
             }
 
             this.wss.close = () => {
+                this.isConnect = false
                 reject(false)
             }
         })

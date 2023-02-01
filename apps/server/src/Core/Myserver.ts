@@ -40,7 +40,7 @@ export class Myserver {
         })
     }
 
-    registerAPI(name, cb) {
+    registerAPI(name, cb: Function) {
         this.registAPIMap.set(name, cb)
     }
 }

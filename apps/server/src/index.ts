@@ -2,6 +2,8 @@ import { symlinkCommon } from "./Utils";
 import { WebSocketServer } from "ws";
 import { EventEnum } from "./Enum";
 import { Connection, Myserver } from "./Core";
+import PlayerManager from "./Biz/PlayerManager";
+import { Player } from "./Biz/Player";
 // import { APIMsgEnum } from "./Common";
 
 symlinkCommon();
@@ -14,7 +16,12 @@ wss.startConnect().then(() => {
 })
 
 wss.registerAPI(EventEnum.MsgPlayerLogin, (cc: Connection, data: any) => {
-    return data + '我是服务端 我收到了消息'
+    const { nickName } = data
+    const player = PlayerManager.Instance.createPlayer({ nickName, cc })
+
+    return {
+        player: PlayerManager.Instance.getPlayerDataView(player)
+    }
 })
 
 
