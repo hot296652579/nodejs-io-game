@@ -37,7 +37,7 @@ export class DataManager extends Singleton {
     bulletMap: Map<number, BulletManager> = new Map<number, BulletManager>();
     actorMap: Map<number, ActorManager> = new Map<number, ActorManager>();
     textureMap: Map<string, SpriteFrame[]> = new Map<string, SpriteFrame[]>();
-    MYSELF_PLAYERID = 1;
+    Myself_PlayerID = 1;
     frameId = 1;
 
     static get Instance() {

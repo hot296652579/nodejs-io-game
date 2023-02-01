@@ -8,6 +8,12 @@ import { Player } from "./Biz/Player";
 
 symlinkCommon();
 
+declare module './Core' {
+    interface Connection {
+        playerId: number
+    }
+}
+
 const wss = new Myserver({ port: 9876 })
 wss.startConnect().then(() => {
     console.log('服务器启动!')
@@ -18,10 +24,23 @@ wss.startConnect().then(() => {
 wss.registerAPI(EventEnum.MsgPlayerLogin, (cc: Connection, data: any) => {
     const { nickName } = data
     const player = PlayerManager.Instance.createPlayer({ nickName, cc })
-
+    cc.playerId = player.id
     return {
         player: PlayerManager.Instance.getPlayerDataView(player)
     }
+})
+
+wss.on('onconnection', () => {
+    console.log('有人来连接了服务器...')
+})
+
+wss.on('onclose', (cc: Connection) => {
+    const playerId = cc.playerId
+    if (playerId) {
+        PlayerManager.Instance.removePlayer(playerId)
+        console.log('playerId:' + cc.playerId + '走了...')
+    }
+
 })
 
 

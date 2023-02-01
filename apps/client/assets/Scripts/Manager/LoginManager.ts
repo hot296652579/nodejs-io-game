@@ -50,6 +50,7 @@ export class LoginManager extends Component {
             return
         }
 
+        DataManager.Instance.Myself_PlayerID = res.player.id
         console.log('有玩家登陆,nickName :' + res.player.nickName)
     }
 

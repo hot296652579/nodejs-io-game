@@ -1,7 +1,7 @@
-import { WebSocketServer, WebSocket } from "ws"
+import { WebSocketServer, WebSocket, EventEmitter } from "ws"
 import { Connection } from "./Connection"
 
-export class Myserver {
+export class Myserver extends EventEmitter {
     port: number
 
     wss: WebSocketServer
@@ -9,6 +9,7 @@ export class Myserver {
     registAPIMap: Map<string, Function> = new Map()
 
     constructor({ port }: { port: number }) {
+        super()
         this.port = port
     }
 
@@ -25,11 +26,9 @@ export class Myserver {
 
                 cc.on('close', () => {
                     this.connections.delete(cc)
-
-                    console.log('liule liule....')
+                    this.emit('onclose', cc)
                 })
-
-                console.log('有人连接 !')
+                this.emit('onconnection')
             })
             this.wss.on('error', (e) => {
                 reject(false)
