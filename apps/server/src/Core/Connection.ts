@@ -1,4 +1,5 @@
 import { EventEmitter, WebSocketServer, WebSocket } from "ws";
+import { IApiModel } from "../Common/Model";
 import { Myserver } from "./Myserver";
 
 interface IItem {
@@ -48,7 +49,7 @@ export class Connection extends EventEmitter {
         })
     }
 
-    sendMessge(event: string, data) {
+    sendMessge<T extends keyof IApiModel['msg']>(name: T, data: IApiModel['msg'][T]) {
         const msg = {
             data,
             event
@@ -57,7 +58,7 @@ export class Connection extends EventEmitter {
         // console.log(msg)
     }
 
-    listenMsg(event: string, cb: Function, ctx: unknown) {
+    listenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {
         if (this.mapMsg.has(event)) {
             this.mapMsg.get(event).push({ cb, ctx });
         } else {
@@ -65,7 +66,7 @@ export class Connection extends EventEmitter {
         }
     }
 
-    unlistenMsg(event: string, cb: Function, ctx: unknown) {
+    unlistenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {
         if (this.mapMsg.has(event)) {
             const index = this.mapMsg.get(event).findIndex((i) => cb === i.cb && i.ctx === ctx);
             index > -1 && this.mapMsg.get(event).splice(index, 1);

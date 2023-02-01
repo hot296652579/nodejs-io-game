@@ -1,4 +1,5 @@
 import { WebSocketServer, WebSocket, EventEmitter } from "ws"
+import { IApiModel } from "../Common/Model"
 import { Connection } from "./Connection"
 
 export class Myserver extends EventEmitter {
@@ -39,7 +40,7 @@ export class Myserver extends EventEmitter {
         })
     }
 
-    registerAPI(name, cb: Function) {
+    registerAPI<T extends keyof IApiModel['api']>(name: T, cb: (connection: Connection, args: IApiModel['api'][T]['req']) => void) {
         this.registAPIMap.set(name, cb)
     }
 }

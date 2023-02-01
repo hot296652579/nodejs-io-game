@@ -5,7 +5,7 @@ export class Player {
     id: number
     nickName: string
     connection: Connection
-    rid: string
+    rid: number
     constructor({ id, nickName, connection }: Pick<Player, 'id' | 'nickName' | 'connection'>) {
         this.id = id
         this.nickName = nickName

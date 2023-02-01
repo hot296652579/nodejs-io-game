@@ -1,9 +1,11 @@
 import { symlinkCommon } from "./Utils";
 import { WebSocketServer } from "ws";
 import { EventEnum } from "./Enum";
-import { Connection, Myserver } from "./Core";
 import PlayerManager from "./Biz/PlayerManager";
 import { Player } from "./Biz/Player";
+import { IAPILoginReq } from "./Common";
+import { Connection } from "./Core/Connection";
+import { Myserver } from "./Core/Myserver";
 // import { APIMsgEnum } from "./Common";
 
 symlinkCommon();
@@ -21,10 +23,10 @@ wss.startConnect().then(() => {
     console.log('Myservere error:' + e)
 })
 
-wss.registerAPI(EventEnum.MsgPlayerLogin, (cc: Connection, data: any) => {
+wss.registerAPI(EventEnum.MsgPlayerLogin, (connection: Connection, data: IAPILoginReq) => {
     const { nickName } = data
-    const player = PlayerManager.Instance.createPlayer({ nickName, cc })
-    cc.playerId = player.id
+    const player = PlayerManager.Instance.createPlayer({ nickName, connection })
+    connection.playerId = player.id
     return {
         player: PlayerManager.Instance.getPlayerDataView(player)
     }

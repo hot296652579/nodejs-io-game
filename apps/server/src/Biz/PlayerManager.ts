@@ -1,4 +1,6 @@
 import Singleton from "../Base/Singleton";
+import { IAPILoginReq } from "../Common";
+import { Connection } from "../Core";
 import { Player } from "./Player";
 
 export default class PlayerManager extends Singleton {
@@ -10,7 +12,7 @@ export default class PlayerManager extends Singleton {
     players: Set<Player> = new Set()
     playerIdMap: Map<number, Player> = new Map()
 
-    createPlayer({ nickName, connection }: any) {
+    createPlayer({ nickName, connection }: IAPILoginReq & { connection: Connection }) {
         const player = new Player({ id: this.nextPlayerId++, nickName, connection })
         this.players.add(player)
         this.playerIdMap.set(player.id, player)

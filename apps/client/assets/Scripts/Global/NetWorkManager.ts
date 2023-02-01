@@ -1,5 +1,6 @@
 import { _decorator, resources, Asset } from "cc";
 import Singleton from "../Base/Singleton";
+import { IApiModel } from "../Common";
 import { EventEnum } from "../Enum";
 
 interface IItem {
@@ -7,10 +8,10 @@ interface IItem {
     ctx: unknown;
 }
 
-interface ICallAPIMsg {
+interface ICallAPIMsg<T> {
     success: boolean,
     error?: Error,
-    res?: any
+    res?: T
 }
 export class NetWorkManager extends Singleton {
     frameId: number = 0;
@@ -66,13 +67,13 @@ export class NetWorkManager extends Singleton {
         })
     }
 
-    async callAPIMsg(name: string, data): Promise<ICallAPIMsg> {
+    async callAPIMsg<T extends keyof IApiModel['api']>(name: T, data: IApiModel['api'][T]['req']): Promise<ICallAPIMsg<IApiModel['api'][T]['res']>> {
         return new Promise((resolve) => {
             try {
                 const timeout = setTimeout(() => {
                     resolve({ success: false, error: new Error('Time out') })
                     clearTimeout(timeout)
-                    this.unlistenMsg(name, cb, null)
+                    this.unlistenMsg(name as any, cb, null)
                 }, 2000);
 
                 const cb = function (res) {
@@ -81,15 +82,15 @@ export class NetWorkManager extends Singleton {
                     this.unlistenMsg(name, cb, null)
                 }
 
-                this.listenMsg(name, cb, null)
-                this.sendMessge(name, data)
+                this.listenMsg(name as any, cb, null)
+                this.sendMessge(name as any, data)
             } catch (error) {
                 resolve({ success: false, error })
             }
         })
     }
 
-    sendMessge(name: string, data) {
+    sendMessge<T extends keyof IApiModel['msg']>(name: T, data: IApiModel['msg'][T]) {
         const msg = {
             data,
             name
@@ -97,7 +98,7 @@ export class NetWorkManager extends Singleton {
         this.wss.send(JSON.stringify(msg))
     }
 
-    listenMsg(event: string, cb: Function, ctx: unknown) {
+    listenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {
         if (this.map.has(event)) {
             this.map.get(event).push({ cb, ctx });
         } else {
@@ -105,7 +106,7 @@ export class NetWorkManager extends Singleton {
         }
     }
 
-    unlistenMsg(event: string, cb: Function, ctx: unknown) {
+    unlistenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {
         if (this.map.has(event)) {
             const index = this.map.get(event).findIndex((i) => cb === i.cb && i.ctx === ctx);
             index > -1 && this.map.get(event).splice(index, 1);
