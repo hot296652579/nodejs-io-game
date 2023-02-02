@@ -24,7 +24,7 @@ export class NetWorkManager extends Singleton {
     private map: Map<string, Array<IItem>> = new Map()
 
     isConnect = false
-    port = 9876
+    port = 7777
     async connect() {
         return new Promise((resolve, reject) => {
             if (this.isConnect) {
@@ -42,10 +42,10 @@ export class NetWorkManager extends Singleton {
             this.wss.onmessage = (messge) => {
                 try {
                     const json = JSON.parse(messge.data)
-                    console.log('json : ' + json)
-                    const { event, data } = json
-                    if (this.map.has(event)) {
-                        this.map.get(event).forEach(({ cb, ctx }) => {
+                    console.log('onmessage : ', messge)
+                    const { name, data } = json
+                    if (this.map.has(name)) {
+                        this.map.get(name).forEach(({ cb, ctx }) => {
                             cb.call(ctx, data);
                         });
                     }

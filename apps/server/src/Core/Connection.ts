@@ -21,8 +21,8 @@ export class Connection extends EventEmitter {
             try {
                 const strMsg = buffer.toString()
                 try {
-                    // console.log(buffer)
                     const msg = JSON.parse(strMsg)
+                    // console.log('msg', msg)
                     const { name, data } = msg
 
                     if (this.myserver.registAPIMap.has(name)) {
@@ -52,10 +52,10 @@ export class Connection extends EventEmitter {
     sendMessge<T extends keyof IApiModel['msg']>(name: T, data: IApiModel['msg'][T]) {
         const msg = {
             data,
-            event
+            name
         }
         this.ws.send(JSON.stringify(msg))
-        // console.log(msg)
+        console.log('sendMessge', msg)
     }
 
     listenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {

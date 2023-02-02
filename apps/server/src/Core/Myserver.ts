@@ -17,7 +17,6 @@ export class Myserver extends EventEmitter {
     startConnect() {
         return new Promise((resolve, reject) => {
             this.wss = new WebSocketServer({ port: this.port })
-
             this.wss.on('listening', () => {
                 resolve(true)
             })

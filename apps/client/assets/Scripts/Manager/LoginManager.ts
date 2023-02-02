@@ -25,7 +25,7 @@ export class LoginManager extends Component {
     editBox: EditBox = null;
 
     async start() {
-        director.preloadScene(SceneEnum.Login)
+        director.preloadScene(SceneEnum.Hall)
         await NetWorkManager.Instance.connect()
     }
 
@@ -54,7 +54,7 @@ export class LoginManager extends Component {
         DataManager.Instance.Myself_PlayerID = res.player.id
         console.log('有玩家登陆,nickName :' + res.player.nickName)
 
-        director.loadScene(SceneEnum.Battle)
+        director.loadScene(SceneEnum.Hall)
     }
 
     onDestroy() {

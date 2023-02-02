@@ -34,4 +34,8 @@ export default class PlayerManager extends Singleton {
             rid
         }
     }
+
+    getPlayerListView(players: Set<Player> = this.players) {
+        return [...this.players].map((p) => this.getPlayerDataView(p)) //集合 转成 数组
+    }
 }

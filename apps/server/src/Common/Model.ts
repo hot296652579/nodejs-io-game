@@ -1,5 +1,5 @@
 import { EventEnum } from "../Enum"
-import { IAPILoginReq, IAPILoginRes } from "./API"
+import { IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes } from "./API"
 import { IMsgClientSync, IMsgServerSync } from "./Msg"
 
 export interface IApiModel {
@@ -7,6 +7,10 @@ export interface IApiModel {
         [EventEnum.MsgPlayerLogin]: {
             req: IAPILoginReq,
             res: IAPILoginRes
+        },
+        [EventEnum.MsgPlayerList]: {
+            req: IAPPlayerListReq,
+            res: IAPPlayerListRes
         }
     },
     msg: {

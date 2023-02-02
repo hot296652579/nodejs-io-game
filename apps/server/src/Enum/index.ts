@@ -48,7 +48,7 @@ export enum EventEnum {
 
   MsgClientSync = 'MsgClientSync',
   MsgServerSync = 'MsgServerSync',
-
+  MsgPlayerList = 'MsgPlayerList',
   MsgPlayerLogin = 'MsgPlayerLogin'
 }
 

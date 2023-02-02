@@ -3,7 +3,7 @@ import { WebSocketServer } from "ws";
 import { EventEnum } from "./Enum";
 import PlayerManager from "./Biz/PlayerManager";
 import { Player } from "./Biz/Player";
-import { IAPILoginReq } from "./Common";
+import { IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes } from "./Common";
 import { Connection } from "./Core/Connection";
 import { Myserver } from "./Core/Myserver";
 // import { APIMsgEnum } from "./Common";
@@ -16,19 +16,25 @@ declare module './Core' {
     }
 }
 
-const wss = new Myserver({ port: 9876 })
+const wss = new Myserver({ port: 7777 })
 wss.startConnect().then(() => {
     console.log('服务器启动!')
 }).catch((e) => {
     console.log('Myservere error:' + e)
 })
 
-wss.registerAPI(EventEnum.MsgPlayerLogin, (connection: Connection, data: IAPILoginReq) => {
+wss.registerAPI(EventEnum.MsgPlayerLogin, (connection: Connection, data: IAPILoginReq): IAPILoginRes => {
     const { nickName } = data
     const player = PlayerManager.Instance.createPlayer({ nickName, connection })
     connection.playerId = player.id
     return {
         player: PlayerManager.Instance.getPlayerDataView(player)
+    }
+})
+
+wss.registerAPI(EventEnum.MsgPlayerList, (connection: Connection, data: IAPPlayerListReq): IAPPlayerListRes => {
+    return {
+        list: PlayerManager.Instance.getPlayerListView()
     }
 })
 
