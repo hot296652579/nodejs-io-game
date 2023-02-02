@@ -8,7 +8,7 @@
  */
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, Prefab, SpriteFrame } from 'cc';
 import Singleton from '../Base/Singleton';
-import { EnityEnum, IActorMove, IBullet, IClientInput, ISate, IWeaponShoot } from '../Common';
+import { EnityEnum, IActorMove, IBullet, IClientInput, IRoom, ISate, IWeaponShoot } from '../Common';
 import { EventEnum, InputTypeEnum } from '../Enum';
 import EventManager from '../Global/EventManager';
 
@@ -39,6 +39,7 @@ export class DataManager extends Singleton {
     textureMap: Map<string, SpriteFrame[]> = new Map<string, SpriteFrame[]>();
     Myself_PlayerID = 1;
     frameId = 1;
+    roomInfo: IRoom;
 
     static get Instance() {
         return super.GetInstance<DataManager>();

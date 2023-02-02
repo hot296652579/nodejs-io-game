@@ -3,9 +3,10 @@ import { WebSocketServer } from "ws";
 import { EventEnum } from "./Enum";
 import PlayerManager from "./Biz/PlayerManager";
 import { Player } from "./Biz/Player";
-import { IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes } from "./Common";
+import { IAPCreateRoomReq, IAPCreateRoomRes, IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes } from "./Common";
 import { Connection } from "./Core/Connection";
 import { Myserver } from "./Core/Myserver";
+import RoomManager from "./Biz/RoomManager";
 // import { APIMsgEnum } from "./Common";
 
 symlinkCommon();
@@ -36,6 +37,22 @@ wss.registerAPI(EventEnum.MsgPlayerLogin, (connection: Connection, data: IAPILog
 wss.registerAPI(EventEnum.MsgPlayerList, (connection: Connection, data: IAPPlayerListReq): IAPPlayerListRes => {
     return {
         list: PlayerManager.Instance.getPlayerListView()
+    }
+})
+
+wss.registerAPI(EventEnum.MsgCreateRoom, (connection: Connection, data: IAPCreateRoomReq): IAPCreateRoomRes => {
+    if (connection.playerId) {
+        const newRoom = RoomManager.Instance.createRoom()
+        const room = RoomManager.Instance.joinRoom(newRoom.id, connection.playerId)
+        if (room) {
+            return {
+                room: RoomManager.Instance.getRoomDataView(room)
+            }
+        } else {
+            throw new Error('房间不存在...')
+        }
+    } else {
+        throw new Error('未登录...')
     }
 })
 

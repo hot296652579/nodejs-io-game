@@ -29,6 +29,7 @@ export class HallManager extends Component {
     playerItemPreab: Prefab = null
 
     async start() {
+        director.preloadScene(SceneEnum.Room)
         NetWorkManager.Instance.listenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
 
         this.content.removeAllChildren()
@@ -65,7 +66,18 @@ export class HallManager extends Component {
             node.getComponent(PlayerItem).init(data)
             node.active = true
         }
+    }
 
+    async clickCreateRoomHandler() {
+        const { success, error, res } = await NetWorkManager.Instance.callAPIMsg(EventEnum.MsgCreateRoom, {})
+        if (!success) {
+            console.log('创建房间发生错误:', error)
+            return
+        }
+
+        DataManager.Instance.roomInfo = res.room
+        console.log('DataManager.Instance.roomInfo:', DataManager.Instance.roomInfo)
+        director.loadScene(SceneEnum.Room)
     }
 
     onDestroy() {

@@ -50,7 +50,8 @@ export enum EventEnum {
   MsgServerSync = 'MsgServerSync',
   MsgPlayerLogin = 'MsgPlayerLogin',
   MsgPlayerList = 'MsgPlayerList',
-  MsgSyncPlayerList = 'MsgSyncPlayerList'
+  MsgSyncPlayerList = 'MsgSyncPlayerList',
+  MsgCreateRoom = 'MsgCreateRoom'
 }
 
 export enum InputTypeEnum {
@@ -63,6 +64,7 @@ export enum InputTypeEnum {
 export enum SceneEnum {
   Login = 'Login',
   Hall = 'Hall',
+  Room = 'Room',
   Battle = 'Battle',
 }
 
