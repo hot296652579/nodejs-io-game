@@ -29,6 +29,8 @@ export class HallManager extends Component {
     playerItemPreab: Prefab = null
 
     async start() {
+        NetWorkManager.Instance.listenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
+
         this.content.removeAllChildren()
 
         this.getPlayersList()
@@ -67,7 +69,7 @@ export class HallManager extends Component {
     }
 
     onDestroy() {
-
+        NetWorkManager.Instance.unlistenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
     }
 
 

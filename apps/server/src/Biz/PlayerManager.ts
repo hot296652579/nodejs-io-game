@@ -1,5 +1,5 @@
 import Singleton from "../Base/Singleton";
-import { IAPILoginReq } from "../Common";
+import { EnityEnum, EventEnum, IAPILoginReq, IPlayer } from "../Common";
 import { Connection } from "../Core";
 import { Player } from "./Player";
 
@@ -24,6 +24,14 @@ export default class PlayerManager extends Singleton {
         if (player) {
             this.players.delete(player)
             this.playerIdMap.delete(pid)
+        }
+    }
+
+    syncPlayers() {
+        for (const player of this.players) {
+            player.connection.sendMessge(EventEnum.MsgSyncPlayerList, {
+                list: this.getPlayerListView()
+            })
         }
     }
 

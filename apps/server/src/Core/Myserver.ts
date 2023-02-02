@@ -26,7 +26,7 @@ export class Myserver extends EventEmitter {
 
                 cc.on('close', () => {
                     this.connections.delete(cc)
-                    this.emit('onclose', cc)
+                    this.emit('disconnection', cc)
                 })
                 this.emit('onconnection')
             })

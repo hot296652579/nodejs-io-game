@@ -27,6 +27,7 @@ wss.registerAPI(EventEnum.MsgPlayerLogin, (connection: Connection, data: IAPILog
     const { nickName } = data
     const player = PlayerManager.Instance.createPlayer({ nickName, connection })
     connection.playerId = player.id
+    PlayerManager.Instance.syncPlayers()
     return {
         player: PlayerManager.Instance.getPlayerDataView(player)
     }
@@ -42,13 +43,13 @@ wss.on('onconnection', () => {
     console.log('有人来连接了服务器...')
 })
 
-wss.on('onclose', (cc: Connection) => {
+wss.on('disconnection', (cc: Connection) => {
     const playerId = cc.playerId
     if (playerId) {
         PlayerManager.Instance.removePlayer(playerId)
         console.log('playerId:' + cc.playerId + '走了...')
     }
-
+    PlayerManager.Instance.syncPlayers()
 })
 
 
