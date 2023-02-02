@@ -47,6 +47,7 @@ export class HallManager extends Component {
 
     onLoad() {
         NetWorkManager.Instance.listenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
+        NetWorkManager.Instance.listenMsg(EventEnum.MsgRoomSync, this.renderRoomList, this)
     }
 
     async getPlayersList() {

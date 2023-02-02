@@ -41,6 +41,8 @@ export enum TexturePathEnum {
 }
 
 
+
+
 export enum EventEnum {
   WeaponShoot = 'WeaponShoot',
   BulletExplosion = 'BulletExplosion',
@@ -48,11 +50,12 @@ export enum EventEnum {
 
   MsgClientSync = 'MsgClientSync',
   MsgServerSync = 'MsgServerSync',
+  MsgPlayerLogin = 'MsgPlayerLogin',
   MsgPlayerList = 'MsgPlayerList',
   MsgSyncPlayerList = 'MsgSyncPlayerList',
-  MsgPlayerLogin = 'MsgPlayerLogin',
   MsgCreateRoom = 'MsgCreateRoom',
-  MsgGetRoomList = 'MsgGetRoomList'
+  MsgGetRoomList = 'MsgGetRoomList',
+  MsgRoomSync = 'MsgRoomSync',
 }
 
 export enum InputTypeEnum {

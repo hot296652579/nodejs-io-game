@@ -37,13 +37,13 @@ export default class RoomManager extends Singleton {
     //     }
     // }
 
-    // syncPlayers() {
-    //     for (const player of this.players) {
-    //         player.connection.sendMessge(EventEnum.MsgSyncPlayerList, {
-    //             list: this.getPlayerListView()
-    //         })
-    //     }
-    // }
+    syncRooms() {
+        for (const player of PlayerManager.Instance.players) {
+            player.connection.sendMessge(EventEnum.MsgRoomSync, {
+                list: this.getRoomListView()
+            })
+        }
+    }
 
     getRoomDataView({ id, players }: Room) {
         return {

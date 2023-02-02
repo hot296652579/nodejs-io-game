@@ -15,6 +15,10 @@ export interface ISyncPlayerList {
     list: IPlayer[]
 }
 
+export interface ISyncRoomList {
+    list: IRoom[]
+}
+
 export interface IMsgRoomList {
     list: IRoom[]
 }

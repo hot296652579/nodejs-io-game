@@ -50,7 +50,10 @@ wss.registerAPI(EventEnum.MsgCreateRoom, (connection: Connection, data: IAPCreat
     if (connection.playerId) {
         const newRoom = RoomManager.Instance.createRoom()
         const room = RoomManager.Instance.joinRoom(newRoom.id, connection.playerId)
+
         if (room) {
+            PlayerManager.Instance.syncPlayers()
+            RoomManager.Instance.syncRooms()
             console.log(`playerId:${connection.playerId} -> 创建了一个房间`)
             return {
                 room: RoomManager.Instance.getRoomDataView(room)
