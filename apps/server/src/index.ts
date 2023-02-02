@@ -3,7 +3,7 @@ import { WebSocketServer } from "ws";
 import { EventEnum } from "./Enum";
 import PlayerManager from "./Biz/PlayerManager";
 import { Player } from "./Biz/Player";
-import { IAPCreateRoomReq, IAPCreateRoomRes, IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes } from "./Common";
+import { IAPCreateRoomReq, IAPCreateRoomRes, IAPGetRoomListReq, IAPGetRoomListRes, IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes } from "./Common";
 import { Connection } from "./Core/Connection";
 import { Myserver } from "./Core/Myserver";
 import RoomManager from "./Biz/RoomManager";
@@ -40,11 +40,18 @@ wss.registerAPI(EventEnum.MsgPlayerList, (connection: Connection, data: IAPPlaye
     }
 })
 
+wss.registerAPI(EventEnum.MsgGetRoomList, (connection: Connection, data: IAPGetRoomListReq): IAPGetRoomListRes => {
+    return {
+        list: RoomManager.Instance.getRoomListView()
+    }
+})
+
 wss.registerAPI(EventEnum.MsgCreateRoom, (connection: Connection, data: IAPCreateRoomReq): IAPCreateRoomRes => {
     if (connection.playerId) {
         const newRoom = RoomManager.Instance.createRoom()
         const room = RoomManager.Instance.joinRoom(newRoom.id, connection.playerId)
         if (room) {
+            console.log(`playerId:${connection.playerId} -> 创建了一个房间`)
             return {
                 room: RoomManager.Instance.getRoomDataView(room)
             }

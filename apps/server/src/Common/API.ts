@@ -28,3 +28,9 @@ export interface IAPCreateRoomReq { }
 export interface IAPCreateRoomRes {
     room: IRoom
 }
+
+export interface IAPGetRoomListReq { }
+
+export interface IAPGetRoomListRes {
+    list: IRoom[]
+}

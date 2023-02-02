@@ -51,7 +51,8 @@ export enum EventEnum {
   MsgPlayerLogin = 'MsgPlayerLogin',
   MsgPlayerList = 'MsgPlayerList',
   MsgSyncPlayerList = 'MsgSyncPlayerList',
-  MsgCreateRoom = 'MsgCreateRoom'
+  MsgCreateRoom = 'MsgCreateRoom',
+  MsgGetRoomList = 'MsgGetRoomList',
 }
 
 export enum InputTypeEnum {

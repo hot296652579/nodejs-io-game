@@ -1,4 +1,4 @@
-import { IPlayer } from "./API";
+import { IPlayer, IRoom } from "./API";
 import { IClientInput } from "./State";
 
 export interface IMsgClientSync {
@@ -13,4 +13,8 @@ export interface IMsgServerSync {
 
 export interface ISyncPlayerList {
     list: IPlayer[]
+}
+
+export interface IMsgRoomList {
+    list: IRoom[]
 }

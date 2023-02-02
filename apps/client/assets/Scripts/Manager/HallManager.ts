@@ -8,13 +8,14 @@
  */
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate, ProgressBar, EditBox, resources, director, Prefab } from 'cc';
 import { EntityManager } from '../Base/EntityManager';
-import { EnityEnum, IActor, IAPILoginRes, IAPPlayerListRes } from '../Common';
+import { EnityEnum, IActor, IAPGetRoomListRes, IAPILoginRes, IAPPlayerListRes } from '../Common';
 import { EntityStateEnum, EventEnum, InputTypeEnum, SceneEnum } from '../Enum';
 import { ActorStateMachine } from '../Enum/ActorStateMachine';
 import EventManager from '../Global/EventManager';
 import { NetWorkManager } from '../Global/NetWorkManager';
 import { JoyStickManager } from '../UI/JoyStickManager';
 import { PlayerItem } from '../UI/PlayerItem';
+import { RoomItem } from '../UI/RoomItem';
 import { radToAngle } from '../Utils';
 import { DataManager } from './DataManager';
 import { WeaponManager } from './WeaponManager';
@@ -23,18 +24,29 @@ const { ccclass, property } = _decorator;
 @ccclass('HallManager')
 export class HallManager extends Component {
     @property(Node)
-    content: Node = null
+    playerListContent: Node = null
 
     @property(Prefab)
     playerItemPreab: Prefab = null
 
+    @property(Node)
+    roomListContent: Node = null
+
+    @property(Prefab)
+    roomItemPreab: Prefab = null
+
     async start() {
         director.preloadScene(SceneEnum.Room)
-        NetWorkManager.Instance.listenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
 
-        this.content.removeAllChildren()
+        this.playerListContent.removeAllChildren()
+        this.roomListContent.removeAllChildren()
 
         this.getPlayersList()
+        this.getRoomList()
+    }
+
+    onLoad() {
+        NetWorkManager.Instance.listenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
     }
 
     async getPlayersList() {
@@ -49,20 +61,50 @@ export class HallManager extends Component {
         this.renderPlayerList(res)
     }
 
-    renderPlayerList({ list }: IAPPlayerListRes) {
-        for (const c of this.content.children) {
+    async getRoomList() {
+        const { success, error, res } = await NetWorkManager.Instance.callAPIMsg(EventEnum.MsgGetRoomList, {})
+        if (!success) {
+            console.log('回掉消息发生错误' + error)
+            return
+        }
+
+        console.log('MsgGetRoomList res:' + res)
+
+        this.renderRoomList(res)
+    }
+
+    renderRoomList({ list }: IAPGetRoomListRes) {
+        for (const c of this.roomListContent.children) {
             c.active = false
         }
 
-        while (this.content.children.length < list.length) {
-            const playerItemPreb = instantiate(this.playerItemPreab)
+        while (this.roomListContent.children.length < list.length) {
+            const playerItemPreb = instantiate(this.roomItemPreab)
             playerItemPreb.active = false
-            playerItemPreb.setParent(this.content)
+            playerItemPreb.setParent(this.roomListContent)
         }
 
         for (let index = 0; index < list.length; index++) {
             const data = list[index]
-            const node = this.content.children[index]
+            const node = this.roomListContent.children[index]
+            node.getComponent(RoomItem).init(data)
+        }
+    }
+
+    renderPlayerList({ list }: IAPPlayerListRes) {
+        for (const c of this.playerListContent.children) {
+            c.active = false
+        }
+
+        while (this.playerListContent.children.length < list.length) {
+            const playerItemPreb = instantiate(this.playerItemPreab)
+            playerItemPreb.active = false
+            playerItemPreb.setParent(this.playerListContent)
+        }
+
+        for (let index = 0; index < list.length; index++) {
+            const data = list[index]
+            const node = this.playerListContent.children[index]
             node.getComponent(PlayerItem).init(data)
             node.active = true
         }
