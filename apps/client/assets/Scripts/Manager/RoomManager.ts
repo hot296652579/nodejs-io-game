@@ -35,6 +35,7 @@ export class RoomManager extends Component {
     }
 
     start() {
+        director.preloadScene(SceneEnum.Hall)
         this.playerListContent.removeAllChildren()
 
         this.renderPlayerList({
@@ -59,6 +60,17 @@ export class RoomManager extends Component {
             node.getComponent(PlayerItem).init(data)
             node.active = true
         }
+    }
+
+    async handlerClickLeave() {
+        const { success, error, res } = await NetWorkManager.Instance.callAPIMsg(EventEnum.ApiLeaveRoom, {})
+        if (!success) {
+            console.log('创建房间发生错误:', error)
+            return
+        }
+
+        DataManager.Instance.roomInfo = null
+        director.loadScene(SceneEnum.Hall)
     }
 
     onDestroy() {

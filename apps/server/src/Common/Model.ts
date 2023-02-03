@@ -1,5 +1,5 @@
 import { EventEnum } from "../Enum"
-import { IAPCreateRoomReq, IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes, IAPCreateRoomRes, IAPGetRoomListRes, IAPGetRoomListReq, IAPJoinRoomReq, IAPJoinRoomRes } from "./API"
+import { IAPCreateRoomReq, IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes, IAPCreateRoomRes, IAPGetRoomListRes, IAPGetRoomListReq, IAPJoinRoomReq, IAPJoinRoomRes, IAPLeaveRoomRes, IAPLeaveRoomReq } from "./API"
 import { IMsgClientSync, IMsgRoom, IMsgRoomList, IMsgServerSync, ISyncPlayerList, ISyncRoomList } from "./Msg"
 
 export interface IApiModel {
@@ -23,6 +23,10 @@ export interface IApiModel {
         [EventEnum.ApiRoomJoin]: {
             req: IAPJoinRoomReq,
             res: IAPJoinRoomRes
+        }
+        [EventEnum.ApiLeaveRoom]: {
+            req: IAPLeaveRoomReq,
+            res: IAPLeaveRoomRes
         }
     },
     msg: {

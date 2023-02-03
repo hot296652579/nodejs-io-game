@@ -29,13 +29,14 @@ export default class RoomManager extends Singleton {
         }
     }
 
-    // removePlayer(pid: number) {
-    //     const player = this.playerIdMap.get(pid)
-    //     if (player) {
-    //         this.players.delete(player)
-    //         this.playerIdMap.delete(pid)
-    //     }
-    // }
+    closeRoom(pid: number) {
+        const room = this.roomIdMap.get(pid)
+        if (room) {
+            room.close()
+            this.rooms.delete(room)
+            this.roomIdMap.delete(room.id)
+        }
+    }
 
     syncRooms() {
         for (const player of PlayerManager.Instance.players) {
@@ -60,6 +61,13 @@ export default class RoomManager extends Singleton {
         const room = this.roomIdMap.get(rid)
         if (room) {
             room.sync()
+        }
+    }
+
+    leaveRoom(rid: number, uid: number) {
+        const room = this.roomIdMap.get(rid)
+        if (room) {
+            room.leaveRoom(uid)
         }
     }
 }

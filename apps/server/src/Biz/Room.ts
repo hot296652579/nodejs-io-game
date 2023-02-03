@@ -1,3 +1,4 @@
+import { threadId } from "worker_threads";
 import { EnityEnum, EventEnum } from "../Common";
 import { Connection } from "../Core";
 import { Player } from "./Player";
@@ -17,6 +18,8 @@ export class Room {
         const player = PlayerManager.Instance.playerIdMap.get(uid)
         if (player) {
             player.id = this.id
+
+            console.log('进入房间的玩家保存房间id:' + this.id)
             this.players.add(player)
         }
     }
@@ -27,5 +30,21 @@ export class Room {
                 room: RoomManager.Instance.getRoomDataView(this)
             })
         }
+    }
+
+    leaveRoom(uid: number) {
+        const player = PlayerManager.Instance.playerIdMap.get(uid)
+        if (player) {
+            player.rid = null
+            this.players.delete(player)
+
+            if (!this.players.size) {
+                RoomManager.Instance.closeRoom(this.id)
+            }
+        }
+    }
+
+    close() {
+        this.players.clear()
     }
 }

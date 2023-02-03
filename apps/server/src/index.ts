@@ -3,7 +3,7 @@ import { WebSocketServer } from "ws";
 import { EventEnum } from "./Enum";
 import PlayerManager from "./Biz/PlayerManager";
 import { Player } from "./Biz/Player";
-import { IAPCreateRoomReq, IAPCreateRoomRes, IAPGetRoomListReq, IAPGetRoomListRes, IAPILoginReq, IAPILoginRes, IAPJoinRoomReq, IAPPlayerListReq, IAPPlayerListRes, IAPJoinRoomRes } from "./Common";
+import { IAPCreateRoomReq, IAPCreateRoomRes, IAPGetRoomListReq, IAPGetRoomListRes, IAPILoginReq, IAPILoginRes, IAPJoinRoomReq, IAPPlayerListReq, IAPPlayerListRes, IAPJoinRoomRes, IAPLeaveRoomRes, IAPLeaveRoomReq } from "./Common";
 import { Connection } from "./Core/Connection";
 import { Myserver } from "./Core/Myserver";
 import RoomManager from "./Biz/RoomManager";
@@ -80,6 +80,30 @@ wss.registerAPI(EventEnum.ApiRoomJoin, (connection: Connection, { rid }: IAPJoin
             }
         } else {
             throw new Error('房间不存在...')
+        }
+    } else {
+        throw new Error('未登录...')
+    }
+})
+
+wss.registerAPI(EventEnum.ApiLeaveRoom, (connection: Connection, data: IAPLeaveRoomReq): IAPLeaveRoomRes => {
+    if (connection.playerId) {
+        const player = PlayerManager.Instance.playerIdMap.get(connection.playerId)
+        console.log('ApiLeaveRoom player', player)
+        if (player) {
+            const rid = player.rid
+            if (rid) {
+                RoomManager.Instance.leaveRoom(rid, player.id)
+                PlayerManager.Instance.syncPlayers()
+                RoomManager.Instance.syncRooms()
+                RoomManager.Instance.syncRoom(rid)
+                console.log(`playerId:${connection.playerId} -> 离开了房间`)
+            } else {
+                throw new Error('玩家不在房间内')
+            }
+            return {}
+        } else {
+            throw new Error('玩家不存在...')
         }
     } else {
         throw new Error('未登录...')
