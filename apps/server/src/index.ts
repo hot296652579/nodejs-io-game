@@ -3,7 +3,7 @@ import { WebSocketServer } from "ws";
 import { EventEnum } from "./Enum";
 import PlayerManager from "./Biz/PlayerManager";
 import { Player } from "./Biz/Player";
-import { IAPCreateRoomReq, IAPCreateRoomRes, IAPGetRoomListReq, IAPGetRoomListRes, IAPILoginReq, IAPILoginRes, IAPPlayerListReq, IAPPlayerListRes } from "./Common";
+import { IAPCreateRoomReq, IAPCreateRoomRes, IAPGetRoomListReq, IAPGetRoomListRes, IAPILoginReq, IAPILoginRes, IAPJoinRoomReq, IAPPlayerListReq, IAPPlayerListRes, IAPJoinRoomRes } from "./Common";
 import { Connection } from "./Core/Connection";
 import { Myserver } from "./Core/Myserver";
 import RoomManager from "./Biz/RoomManager";
@@ -55,6 +55,26 @@ wss.registerAPI(EventEnum.MsgCreateRoom, (connection: Connection, data: IAPCreat
             PlayerManager.Instance.syncPlayers()
             RoomManager.Instance.syncRooms()
             console.log(`playerId:${connection.playerId} -> 创建了一个房间`)
+            return {
+                room: RoomManager.Instance.getRoomDataView(room)
+            }
+        } else {
+            throw new Error('房间不存在...')
+        }
+    } else {
+        throw new Error('未登录...')
+    }
+})
+
+wss.registerAPI(EventEnum.ApiRoomJoin, (connection: Connection, { rid }: IAPJoinRoomReq): IAPJoinRoomRes => {
+    if (connection.playerId) {
+        const room = RoomManager.Instance.joinRoom(rid, connection.playerId)
+
+        if (room) {
+            PlayerManager.Instance.syncPlayers()
+            RoomManager.Instance.syncRooms()
+            RoomManager.Instance.syncRoom(room.id)
+            console.log(`playerId:${connection.playerId} -> 进入了rid:${rid}房间`)
             return {
                 room: RoomManager.Instance.getRoomDataView(room)
             }

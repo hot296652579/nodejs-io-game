@@ -1,6 +1,8 @@
+import { EnityEnum, EventEnum } from "../Common";
 import { Connection } from "../Core";
 import { Player } from "./Player";
 import PlayerManager from "./PlayerManager";
+import RoomManager from "./RoomManager";
 
 
 export class Room {
@@ -16,6 +18,14 @@ export class Room {
         if (player) {
             player.id = this.id
             this.players.add(player)
+        }
+    }
+
+    sync() {
+        for (const player of this.players) {
+            player.connection.sendMessge(EventEnum.MsgRoom, {
+                room: RoomManager.Instance.getRoomDataView(this)
+            })
         }
     }
 }

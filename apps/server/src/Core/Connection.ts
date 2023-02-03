@@ -22,13 +22,13 @@ export class Connection extends EventEmitter {
                 const strMsg = buffer.toString()
                 try {
                     const msg = JSON.parse(strMsg)
-                    // console.log('msg', msg)
                     const { name, data } = msg
 
                     if (this.myserver.registAPIMap.has(name)) {
                         // console.log('调用已经注册的接口...')
                         const cb = this.myserver.registAPIMap.get(name)
                         const res = cb.call(null, this, data)
+                        console.log('message name:', name)
                         this.sendMessge(name, {
                             success: true,
                             res

@@ -73,16 +73,16 @@ export class NetWorkManager extends Singleton {
                 const timeout = setTimeout(() => {
                     resolve({ success: false, error: new Error('Time out') })
                     clearTimeout(timeout)
-                    this.unlistenMsg(name as any, cb, null)
+                    this.unListenMsg(name as any, cb, null)
                 }, 2000);
 
                 const cb = function (res) {
                     resolve(res)
                     clearTimeout(timeout)
-                    this.unlistenMsg(name, cb, null)
+                    this.unListenMsg(name, cb, null)
                 }
 
-                this.listenMsg(name as any, cb, null)
+                this.addListenMsg(name as any, cb, null)
                 this.sendMessge(name as any, data)
             } catch (error) {
                 resolve({ success: false, error })
@@ -98,7 +98,7 @@ export class NetWorkManager extends Singleton {
         this.wss.send(JSON.stringify(msg))
     }
 
-    listenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {
+    addListenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {
         if (this.map.has(event)) {
             this.map.get(event).push({ cb, ctx });
         } else {
@@ -106,7 +106,7 @@ export class NetWorkManager extends Singleton {
         }
     }
 
-    unlistenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {
+    unListenMsg<T extends keyof IApiModel['msg']>(event: T, cb: (args: IApiModel['msg'][T]) => void, ctx: unknown) {
         if (this.map.has(event)) {
             const index = this.map.get(event).findIndex((i) => cb === i.cb && i.ctx === ctx);
             index > -1 && this.map.get(event).splice(index, 1);

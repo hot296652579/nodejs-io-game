@@ -55,4 +55,11 @@ export default class RoomManager extends Singleton {
     getRoomListView(rooms: Set<Room> = this.rooms) {
         return [...rooms].map((p) => this.getRoomDataView(p)) //集合 转成 数组
     }
+    /**同步房间内信息*/
+    syncRoom(rid: number) {
+        const room = this.roomIdMap.get(rid)
+        if (room) {
+            room.sync()
+        }
+    }
 }

@@ -47,6 +47,7 @@ export enum EventEnum {
   WeaponShoot = 'WeaponShoot',
   BulletExplosion = 'BulletExplosion',
   BulletBorn = 'BulletBorn',
+  RoomJoin = 'RoomJoin',
 
   MsgClientSync = 'MsgClientSync',
   MsgServerSync = 'MsgServerSync',
@@ -56,6 +57,9 @@ export enum EventEnum {
   MsgCreateRoom = 'MsgCreateRoom',
   MsgGetRoomList = 'MsgGetRoomList',
   MsgRoomSync = 'MsgRoomSync',
+  MsgRoom = 'MsgRoom',//同步房间内的信息
+
+  ApiRoomJoin = 'ApiRoomJoin'
 }
 
 export enum InputTypeEnum {

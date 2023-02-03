@@ -22,3 +22,9 @@ export interface ISyncRoomList {
 export interface IMsgRoomList {
     list: IRoom[]
 }
+
+
+export interface IMsgRoom {
+    room: IRoom
+}
+

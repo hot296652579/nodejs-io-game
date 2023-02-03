@@ -46,8 +46,9 @@ export class HallManager extends Component {
     }
 
     onLoad() {
-        NetWorkManager.Instance.listenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
-        NetWorkManager.Instance.listenMsg(EventEnum.MsgRoomSync, this.renderRoomList, this)
+        EventManager.Instance.on(EventEnum.RoomJoin, this.handlerJoinRoom, this)
+        NetWorkManager.Instance.addListenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
+        NetWorkManager.Instance.addListenMsg(EventEnum.MsgRoomSync, this.renderRoomList, this)
     }
 
     async getPlayersList() {
@@ -123,8 +124,24 @@ export class HallManager extends Component {
         director.loadScene(SceneEnum.Room)
     }
 
+    async handlerJoinRoom(rid: number) {
+        const { success, error, res } = await NetWorkManager.Instance.callAPIMsg(EventEnum.ApiRoomJoin, {
+            rid
+        })
+        if (!success) {
+            console.log('创建房间发生错误:', error)
+            return
+        }
+
+        DataManager.Instance.roomInfo = res.room
+        console.log('DataManager.Instance.roomInfo:', DataManager.Instance.roomInfo)
+        director.loadScene(SceneEnum.Room)
+    }
+
     onDestroy() {
-        NetWorkManager.Instance.unlistenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
+        NetWorkManager.Instance.unListenMsg(EventEnum.MsgSyncPlayerList, this.renderPlayerList, this)
+        NetWorkManager.Instance.unListenMsg(EventEnum.MsgRoomSync, this.renderRoomList, this)
+        EventManager.Instance.off(EventEnum.RoomJoin, this.handlerJoinRoom, this)
     }
 
 
