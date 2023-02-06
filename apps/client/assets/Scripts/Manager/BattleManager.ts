@@ -41,7 +41,7 @@ export class BattleManager extends Component {
     async start() {
         this.clearGame()
         await Promise.all([this.connectNet(), this.loadRes()])
-        // this.initGame()
+        this.initGame()
 
         // const { success, error, res } = await NetWorkManager.Instance.callAPIMsg(EventEnum.MsgPlayerLogin, '我是客户端玩家javan')
         // if (!success) {
@@ -67,12 +67,12 @@ export class BattleManager extends Component {
         this.showRender = true;
 
         EventManager.Instance.on(EventEnum.MsgClientSync, this.handlerMsgClientSync, this)
-        NetWorkManager.Instance.listenMsg(EventEnum.MsgServerSync, this.handlerMsgServerSync, this)
+        NetWorkManager.Instance.addListenMsg(EventEnum.MsgServerSync, this.handlerMsgServerSync, this)
     }
 
     clearGame() {
         EventManager.Instance.off(EventEnum.MsgClientSync, this.handlerMsgClientSync, this)
-        NetWorkManager.Instance.unlistenMsg(EventEnum.MsgServerSync, this.handlerMsgServerSync, this)
+        NetWorkManager.Instance.unListenMsg(EventEnum.MsgServerSync, this.handlerMsgServerSync, this)
         this.stage.removeAllChildren();
     }
 
@@ -178,7 +178,7 @@ export class BattleManager extends Component {
     }
 
     onDestroy() {
-
+        this.clearGame()
     }
 
 

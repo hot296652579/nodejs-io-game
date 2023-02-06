@@ -3,7 +3,7 @@ import { WebSocketServer } from "ws";
 import { EventEnum } from "./Enum";
 import PlayerManager from "./Biz/PlayerManager";
 import { Player } from "./Biz/Player";
-import { IAPCreateRoomReq, IAPCreateRoomRes, IAPGetRoomListReq, IAPGetRoomListRes, IAPILoginReq, IAPILoginRes, IAPJoinRoomReq, IAPPlayerListReq, IAPPlayerListRes, IAPJoinRoomRes, IAPLeaveRoomRes, IAPLeaveRoomReq } from "./Common";
+import { IAPCreateRoomReq, IAPCreateRoomRes, IAPGetRoomListReq, IAPGetRoomListRes, IAPILoginReq, IAPILoginRes, IAPJoinRoomReq, IAPPlayerListReq, IAPPlayerListRes, IAPJoinRoomRes, IAPLeaveRoomRes, IAPLeaveRoomReq, IAPGameStartReq, IAPGameStartRes } from "./Common";
 import { Connection } from "./Core/Connection";
 import { Myserver } from "./Core/Myserver";
 import RoomManager from "./Biz/RoomManager";
@@ -59,7 +59,7 @@ wss.registerAPI(EventEnum.MsgCreateRoom, (connection: Connection, data: IAPCreat
                 room: RoomManager.Instance.getRoomDataView(room)
             }
         } else {
-            throw new Error('房间不存在...')
+            throw new Error('房间创建失败...')
         }
     } else {
         throw new Error('未登录...')
@@ -80,6 +80,28 @@ wss.registerAPI(EventEnum.ApiRoomJoin, (connection: Connection, { rid }: IAPJoin
             }
         } else {
             throw new Error('房间不存在...')
+        }
+    } else {
+        throw new Error('未登录...')
+    }
+})
+
+wss.registerAPI(EventEnum.ApiGameStart, (connection: Connection, { }: IAPGameStartReq): IAPGameStartRes => {
+    if (connection.playerId) {
+        const player = PlayerManager.Instance.playerIdMap.get(connection.playerId)
+        if (player) {
+            console.log('当前房间有玩家:', player)
+            const rid = player.id
+            if (rid) {
+                RoomManager.Instance.startGame(rid)
+                PlayerManager.Instance.syncPlayers()
+                RoomManager.Instance.syncRooms()
+                return {
+
+                }
+            } else {
+                throw new Error('房间不存在...')
+            }
         }
     } else {
         throw new Error('未登录...')

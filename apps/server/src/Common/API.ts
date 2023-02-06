@@ -50,3 +50,12 @@ export interface IAPLeaveRoomReq {
 export interface IAPLeaveRoomRes {
 
 }
+
+
+export interface IAPGameStartReq {
+
+}
+
+export interface IAPGameStartRes {
+
+}

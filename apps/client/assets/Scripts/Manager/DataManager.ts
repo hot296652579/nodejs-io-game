@@ -47,36 +47,36 @@ export class DataManager extends Singleton {
 
     state: ISate = {
         actors: [
-            {
-                id: 1,
-                type: EnityEnum.EnityEnum_ACTOR1,
-                weaponType: EnityEnum.EnityEnum_Weapon1,
-                bulletType: EnityEnum.EnityEnum_Bullet2,
-                hp: 100,
-                position: {
-                    x: 100,
-                    y: 100
-                },
-                direction: {
-                    x: 1,
-                    y: 0
-                }
-            },
-            {
-                id: 2,
-                type: EnityEnum.EnityEnum_ACTOR1,
-                weaponType: EnityEnum.EnityEnum_Weapon1,
-                bulletType: EnityEnum.EnityEnum_Bullet2,
-                hp: 100,
-                position: {
-                    x: -100,
-                    y: -100
-                },
-                direction: {
-                    x: -1,
-                    y: 0
-                }
-            }
+            // {
+            //     id: 1,
+            //     type: EnityEnum.EnityEnum_ACTOR1,
+            //     weaponType: EnityEnum.EnityEnum_Weapon1,
+            //     bulletType: EnityEnum.EnityEnum_Bullet2,
+            //     hp: 100,
+            //     position: {
+            //         x: 100,
+            //         y: 100
+            //     },
+            //     direction: {
+            //         x: 1,
+            //         y: 0
+            //     }
+            // },
+            // {
+            //     id: 2,
+            //     type: EnityEnum.EnityEnum_ACTOR1,
+            //     weaponType: EnityEnum.EnityEnum_Weapon1,
+            //     bulletType: EnityEnum.EnityEnum_Bullet2,
+            //     hp: 100,
+            //     position: {
+            //         x: -100,
+            //         y: -100
+            //     },
+            //     direction: {
+            //         x: -1,
+            //         y: 0
+            //     }
+            // }
         ],
         bullets: [],
         nextShoot: 1

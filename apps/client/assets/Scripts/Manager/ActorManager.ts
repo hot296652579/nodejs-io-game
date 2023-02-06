@@ -47,7 +47,7 @@ export class ActorManager extends EntityManager {
     update(dt) {
         if (DataManager.Instance.jm.inputVec.length()) {
             const { x, y } = DataManager.Instance.jm.inputVec;
-            if (this.id != DataManager.Instance.MYSELF_PLAYERID) return
+            if (this.id != DataManager.Instance.Myself_PlayerID) return
 
             EventManager.Instance.emit(EventEnum.MsgClientSync, {
                 id: 1,

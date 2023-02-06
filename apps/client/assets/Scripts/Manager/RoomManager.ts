@@ -8,7 +8,7 @@
  */
 import { _decorator, Component, Node, Input, input, EventTouch, Vec2, UITransform, instantiate, ProgressBar, EditBox, resources, director, Prefab } from 'cc';
 import { EntityManager } from '../Base/EntityManager';
-import { EnityEnum, IActor, IAPGetRoomListRes, IAPILoginRes, IAPPlayerListRes, IMsgRoom } from '../Common';
+import { EnityEnum, IActor, IAPGetRoomListRes, IAPILoginRes, IAPPlayerListRes, IMsgGameStart, IMsgRoom } from '../Common';
 import { EntityStateEnum, EventEnum, InputTypeEnum, SceneEnum } from '../Enum';
 import { ActorStateMachine } from '../Enum/ActorStateMachine';
 import EventManager from '../Global/EventManager';
@@ -31,11 +31,12 @@ export class RoomManager extends Component {
 
     onLoad() {
         NetWorkManager.Instance.addListenMsg(EventEnum.MsgRoom, this.renderPlayerList, this)
+        NetWorkManager.Instance.addListenMsg(EventEnum.MsgGameStart, this.handlerGameStart, this)
         // NetWorkManager.Instance.addListenMsg(EventEnum.MsgRoomSync, this.renderRoomList, this)
     }
 
     start() {
-        director.preloadScene(SceneEnum.Hall)
+        director.preloadScene(SceneEnum.Battle)
         this.playerListContent.removeAllChildren()
 
         this.renderPlayerList({
@@ -73,8 +74,24 @@ export class RoomManager extends Component {
         director.loadScene(SceneEnum.Hall)
     }
 
+    async handlerClickStart() {
+        const { success, error, res } = await NetWorkManager.Instance.callAPIMsg(EventEnum.ApiGameStart, {})
+        if (!success) {
+            console.log('游戏开始 发生错误:', error)
+            return
+        }
+    }
+
+    handlerGameStart({ state }: IMsgGameStart) {
+        DataManager.Instance.state = state
+        director.loadScene(SceneEnum.Battle, function () {
+            console.log('战斗场景加载完成...')
+        })
+    }
+
     onDestroy() {
         NetWorkManager.Instance.unListenMsg(EventEnum.MsgRoom, this.renderPlayerList, this)
+        // NetWorkManager.Instance.unListenMsg(EventEnum.MsgGameStart, this.handlerGameStart, this)
     }
 
 

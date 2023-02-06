@@ -23,6 +23,8 @@ export default class RoomManager extends Singleton {
 
     joinRoom(rid: number, uid: number) {
         const room = this.roomIdMap.get(rid)
+        console.log('加入的房间id :', rid)
+        console.log('room: ', room)
         if (room) {
             room.join(uid)
             return room
@@ -35,6 +37,13 @@ export default class RoomManager extends Singleton {
             room.close()
             this.rooms.delete(room)
             this.roomIdMap.delete(room.id)
+        }
+    }
+
+    startGame(rid: number) {
+        const room = this.roomIdMap.get(rid)
+        if (room) {
+            room.start()
         }
     }
 

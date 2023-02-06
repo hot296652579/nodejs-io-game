@@ -56,9 +56,11 @@ export enum EventEnum {
   MsgGetRoomList = 'MsgGetRoomList',
   MsgRoomSync = 'MsgRoomSync',
   MsgRoom = 'MsgRoom',//同步房间内的信息
+  MsgGameStart = 'MsgGameStart',
 
   ApiRoomJoin = 'ApiRoomJoin',
-  ApiLeaveRoom = 'ApiLeaveRoom'
+  ApiLeaveRoom = 'ApiLeaveRoom',
+  ApiGameStart = 'ApiGameStart',
 }
 
 export enum InputTypeEnum {
